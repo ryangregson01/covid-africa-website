@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database-refresher
+spec:
+  selector:
+    matchLabels:
+      app: database-refresher
+  template:
+    metadata:
+      name: database-refresher
+      labels:
+        app: database-refresher
+    spec:
+      containers:
+      - name: database-refresher
+        image: johnlemmon/database-refresher
+        volumeMounts:
+        - name: config
+          mountPath: /var/lib/harvester/config
+          readOnly: true
+        imagePullPolicy: Never
+      volumes:
+      - name: config
+        configMap:
+          name: webapp-config
+           
