@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  template:
+    metadata:
+      name: webapp
+      labels:
+        app: webapp
+    spec:
+      containers:
+      - name: webapp
+        image: johnlemmon/covid-dashboard
+        ports:
+        - name: webapp-wsgi
+          containerPort: 8000
+        volumeMounts:
+        - name: webapp-data
+          mountPath: /var/lib/covid-dashboard
+        env:
+        - name: DJANGO_ALLOWED_HOSTS
+          valueFrom:
+            configMapKeyRef:
+              name: webapp-config
+              key: allowed-hosts
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: webapp-wsgi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: webapp-wsgi
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: webapp-data
+        persistentVolumeClaim:
+          claimName: webapp-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+spec:
+  selector:
+    app: webapp
+  ports:
+  - port: 8000
