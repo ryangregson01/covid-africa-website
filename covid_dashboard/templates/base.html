@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Walt Adamson" />
+    <meta name="description" content="Visualisations of COVID-19 statistics across Africa" />
+
+    <title>
+        {% block title_block %}
+            Africa Tracker
+        {% endblock %}
+    </title>
+
+    <!-- scale web-page to client device width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Open Graph protocol integration -->
+    <meta property="og:title" content="COVID-19 Africa Tracker" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" href="{% static 'favicon.ico' %}" />
+    <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml" />
+
+    <!-- load stylesheets -->
+    <link rel="stylesheet" href="{% static 'style/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'style/global.css' %}" />
+
+    <!-- load fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" crossorigin />
+</head>
+<body>
+    <nav class="navigation">
+        <ul>
+            <li><a href="#">Top of Page</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Sources</a></li>
+            <li><a href="#">Donate</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block body_block %}
+            Hello, World!
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>Walt Anderson with collaboration with CS21</p>
+    </footer>
+</body>
+</html>

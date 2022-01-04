@@ -1,0 +1,31 @@
+.navigation a {
+    color: black;
+    font-style: italic;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 5px 15px;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
+.navigation a:hover {
+    color: red;
+}
+
+.navigation {
+    margin-top: 0;
+    width: 100%;
+}
+
+.navigation ul {
+    margin-top: 0;
+    box-sizing: border-box;
+    background: #ced6f1;
+    border-radius: 0px 0px 5px 5px;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25));
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
