@@ -29,6 +29,8 @@ spec:
             configMapKeyRef:
               name: webapp-config
               key: allowed-hosts
+        - name: DJANGO_DEBUG
+          value: "true"
         - name: POD_IP
           valueFrom:
             fieldRef:
