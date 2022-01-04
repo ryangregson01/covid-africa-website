@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clickhouse
+spec:
+  selector:
+    matchLabels:
+      app: clickhouse
+  template:
+    metadata:
+      name: clickhouse
+      labels:
+        app: clickhouse
+    spec:
+      containers:
+      - name: clickhouse
+        image: yandex/clickhouse-server
+        ports:
+        - name: clickhouse-tcp
+          containerPort: 9000
+        volumeMounts:
+        - name: config
+          mountPath: /docker-entrypoint-initdb.d
+          readOnly: true
+        - name: clickhouse-data
+          mountPath: /var/lib/clickhouse
+        readinessProbe:
+          tcpSocket:
+            port: clickhouse-tcp
+        livenessProbe:
+          tcpSocket:
+            port: clickhouse-tcp
+          initialDelaySeconds: 60
+      volumes:
+      - name: config
+        configMap:
+          name: clickhouse-config
+      - name: clickhouse-data
+        persistentVolumeClaim:
+          claimName: clickhouse-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: covid-database
+spec:
+  selector:
+    app: clickhouse
+  ports:
+  - port: 9000
