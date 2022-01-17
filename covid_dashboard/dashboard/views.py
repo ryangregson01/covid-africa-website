@@ -12,13 +12,15 @@ def index(request):
 def get_covid_data(request):
     results = ch_client.execute("""
         SELECT
+            Location,
             toStartOfWeek(UpdateDate) AS Week,
             ceil(avg(NewCases)) AS AvgNewCases
         FROM covid19.updates
         WHERE Continent='Africa'
-        GROUP BY Week
-        ORDER BY Week DESC
-        LIMIT 100;
+        GROUP BY
+            Location,
+            Week
+        ORDER BY Week ASC;
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})

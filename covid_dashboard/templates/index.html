@@ -6,30 +6,97 @@
 {% endblock %}
 
 {% block body_block %}
-<article>
-<iframe src="https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&facet=none&pickerSort=asc&pickerMetric=location&Metric=People+vaccinated+%28by+dose%29&Interval=7-day+rolling+average&Relative+to+Population=true&Align+outbreaks=false&country=NGA~TZA~ZAF~DZA~AGO~BEN~BWA~BFA~BDI~COD~CMR~CAF~TCD~COM~COG~DJI~EGY~GNQ~SWZ~ETH~GAB~GMB~GHA~GIN~GNB~KEN&hideControls=true" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>
+<article id="choropleth" class="graph">
+
 </article>
 
-<article>
-<iframe src="https://ourworldindata.org/explorers/coronavirus-data-explorer?zoomToSelection=true&uniformYAxis=0&pickerSort=asc&pickerMetric=location&Metric=Cases%2C+tests%2C+positive+and+reproduction+rate&Interval=7-day+rolling+average&Relative+to+Population=true&Align+outbreaks=false&country=NGA~TZA~ZAF~DZA~AGO~BEN~BWA~BFA~BDI~COD~CMR~CAF~TCD~COM~COG~DJI~EGY~GNQ~SWZ~ETH~GAB~GMB~GHA~GIN~GNB~KEN&hideControls=true" loading="lazy" style="width: 100%; height: 600px; border: 0px none;"></iframe>
+<article id="average-cases" class="graph">
+
 </article>
 
 <script>
-    let dataRequest = new Request('{% url 'dashboard:get_covid_data' %}');
-    const request = fetch(dataRequest, {
-            method: 'GET',
-            mode: 'same-origin',
-            cache: 'default'
-        }).then((response) => {
-            if (response.ok) {
-                response.json().then((content) => {
-                    console.log(content);
-                });
-            } else {
-                console.log("Unable to request data.");
-            }
+let dataRequest = new Request('{% url 'dashboard:get_covid_data' %}');
+const request = fetch(dataRequest, {
+        method: 'GET',
+        mode: 'same-origin',
+        cache: 'default'
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then((content) => {
+                draw_average_cases(content);
+            });
+        } else {
+            console.log("Failed to retrieve COVID-19 data.");
         }
-    );
+    }
+);
+
+function draw_average_cases(content) {
+    var location_cases = {};
+    var dates = [];
+    var last_date = undefined;
+
+    content.forEach((row) => {
+        var location_ = row[0];
+        var datestamp = row[1];
+        var n_cases = row[2];
+
+        var cur_location = location_cases[location_];
+        if (cur_location === undefined) {
+            location_cases[location_] = {
+                name: location_,
+                data: [n_cases],
+            };
+        } else {
+            cur_location.data.push(n_cases);
+        }
+
+        if (datestamp != last_date) {
+            last_date = datestamp;
+            dates.push(datestamp);
+        }
+    });
+
+    Highcharts.chart('average-cases', {
+        title: {
+            text: 'Average Number of New Cases per Week',
+        },
+        chart: {
+            height: 600,
+        },
+        xAxis: {
+            categories: dates,
+            type: 'datetime',
+            labels: {
+                format: '{value:%Y-%m-%d}',
+            },
+        },
+        yAxis: {
+            title: {
+                text: 'Number of New Cases',
+            },
+            min: 0,
+        },
+        tooltip: {
+            formatter: function () {
+                return this.x + '<br>' + this.series.name +
+                        ': <b>' + this.y.toLocaleString() + '</b> cases</br>';
+            },
+        },
+        plotOptions: {
+            line: {
+                marker: {
+                    enabled: false,
+                }
+            }
+        },
+        legend: {
+            title: 'Location',
+            align: 'right',
+        },
+        series: Object.values(location_cases),
+    });
+}
 </script>
 
 {% endblock %}
