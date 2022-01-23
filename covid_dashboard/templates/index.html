@@ -10,11 +10,56 @@
 
 </article>
 
+<table id="all-countries-table" class="table table-striped display">
+
+</table>
+
+
 <article id="average-cases" class="graph">
 
 </article>
 
 <script>
+
+let dataRequest2 = new Request('{% url 'dashboard:get_summary_data' %}');
+const request2 = fetch(dataRequest2, {
+        method: 'GET',
+        mode: 'same-origin',
+        cache: 'default'
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then((content) => {
+                create_summary_table(content);
+            });
+        } else {
+            console.log("Failed to retrieve COVID-19 data.");
+        }
+    }
+);
+
+
+
+function create_summary_table(summaryContent) {
+    var dataset = summaryContent;
+    $(document).ready(function() {
+        $('#all-countries-table').DataTable( {
+            "scrollY":        "200px",
+            "scrollCollapse": true,
+            "paging":         false,
+            "data": dataset,
+            "columns": [
+                { "title": "Country" },
+                { "title": "Cases" },
+                { "title": "New Cases" },
+                { "title": "Deaths" },
+                { "title": "New Deaths" },
+                { "title": "Vaccinated" },
+                { "title": "New Vaccinations" },
+            ]
+        } );
+    } );
+}
+
 let dataRequest = new Request('{% url 'dashboard:get_covid_data' %}');
 const request = fetch(dataRequest, {
         method: 'GET',
