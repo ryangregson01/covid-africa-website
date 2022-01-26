@@ -24,3 +24,23 @@ def get_covid_data(request):
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
+
+
+def get_summary_data(request):
+    results = ch_client.execute("""
+        SELECT
+            Location,
+            MAX(TotalCases) AS Cases,
+            MAX(NewCases) AS NewCases,
+            MAX(TotalDeaths) AS TotalDeaths,
+            MAX(NewDeaths) AS NewDeaths,
+            MAX(TotalVaccinations) AS Vaccinations,
+            MAX(NewVaccinations) AS NewTotalVaccinations
+        FROM covid19.updates
+        WHERE Continent='Africa'
+        GROUP BY
+            Location
+        ORDER BY Location DESC;
+    """)
+    return JsonResponse(results, safe=False,
+                        json_dumps_params={"default": str})

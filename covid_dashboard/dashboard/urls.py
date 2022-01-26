@@ -22,4 +22,5 @@ app_name = 'dashboard'
 urlpatterns = [
     path('', views.index, name='index'),
     path('covid_data', views.get_covid_data, name='get_covid_data'),
+    path('summary_data', views.get_summary_data, name='get_summary_data'),
 ]
