@@ -1,0 +1,29 @@
+stages:
+  - lint
+  - test
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip/
+    - venv/
+
+before_script:
+  - python3 -V
+  - pip3 install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+  - pip install -r covid_dashboard/requirements.txt
+
+lint:
+  stage: lint
+  script:
+    - pip install flake8
+    - flake8 covid_dashboard
+
+django-test:
+    stage: test
+    script:
+      - python covid_dashboard/manage.py test
