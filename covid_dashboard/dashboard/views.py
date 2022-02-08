@@ -31,11 +31,11 @@ def get_summary_data(request):
         SELECT
             Location,
             MAX(TotalCases) AS Cases,
-            ceil(avg(NewCases)) AS NewCases,
+            ceil(avg(NewCasesPerMil)) AS NewCases,
             MAX(TotalDeaths) AS TotalDeaths,
-            ceil(avg(NewDeaths)) AS NewDeaths,
+            ceil(avg(NewDeathsPerMil)) AS NewDeaths,
             MAX(TotalVaccinations) AS Vaccinations,
-            ceil(avg(NewVaccinations)) AS NewVaccinations
+            ceil(avg(NewVaccinationsSmoothPerMil)) AS NewVaccinations
         FROM covid19.updates
         WHERE
             Continent='Africa' AND UpdateDate>=today() - 7
