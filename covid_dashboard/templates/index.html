@@ -196,71 +196,100 @@ function draw_map(content) {
 }
 
 function draw_average_cases(content) {
-    var location_cases = {};
-    var dates = [];
-    var last_date = undefined;
 
-    content.forEach((row) => {
-        var location_ = row[0];
-        var datestamp = row[1];
-        var n_cases = row[2];
+var location_cases = {};
+var dates = [];
+var last_date = undefined;
 
-        var cur_location = location_cases[location_];
-        if (cur_location === undefined) {
-            location_cases[location_] = {
-                name: location_,
-                data: [n_cases],
-            };
-        } else {
-            cur_location.data.push(n_cases);
-        }
+content.forEach((row) => {
+    var location_ = row[0];
+    var datestamp = row[1];
+    var n_cases = row[2];
 
-        if (datestamp != last_date) {
-            last_date = datestamp;
-            dates.push(datestamp);
-        }
-    });
+    var cur_location = location_cases[location_];
+    if (cur_location === undefined) {
+        location_cases[location_] = {
+            name: location_,
+            data: [n_cases],
+            date_recorded: [datestamp]
+        };
+    } else {
+        cur_location.data.push(n_cases);
+        cur_location.date_recorded.push(datestamp);
+    }
 
-    Highcharts.chart('average-cases', {
-        title: {
-            text: 'Average Number of New Cases per Week',
-        },
-        chart: {
-            height: 600,
-        },
-        xAxis: {
-            categories: dates,
-            type: 'datetime',
-            labels: {
-                format: '{value:%Y-%m-%d}',
-            },
-        },
-        yAxis: {
-            title: {
-                text: 'Number of New Cases',
-            },
-            min: 0,
-        },
-        tooltip: {
-            formatter: function () {
-                return this.x + '<br>' + this.series.name +
-                        ': <b>' + this.y.toLocaleString() + '</b> cases</br>';
-            },
-        },
-        plotOptions: {
-            line: {
-                marker: {
-                    enabled: false,
-                }
-            }
-        },
-        legend: {
-            title: 'Location',
-            align: 'right',
-        },
-        series: Object.values(location_cases),
-    });
+    if (datestamp != last_date) {
+        last_date = datestamp;
+        dates.push(datestamp);
+    }
+});
+
+var main_data = []
+const countries = Object.keys(location_cases);
+for (var i=0; i < countries.length; i += 1) {
+    var country = countries[i]
+    var xValues = location_cases[country].date_recorded
+    var yValues = location_cases[country].data
+
+    var data = [{
+        type: 'scatter',
+        name: country,
+        meta: [country],
+        x: xValues,
+        y: yValues,
+        mode: 'lines',
+        hovertemplate: '%{x} <br> %{meta[0]}: %{y} cases <extra></extra>'
+    }];
+
+    main_data.push(data[0])
 }
+
+var layout = {
+    title: 'Average Number of New Cases per Week',
+    height: 600,
+    xaxis: {
+        showgrid: false,
+        linecolor: 'black',
+        rangeselector: {buttons: [
+            {
+                count: 1,
+                label: '1m',
+                step: 'month',
+                stepmode: 'backward'
+            },
+            {
+                count: 3,
+                label: '3m',
+                step: 'month',
+                stepmode: 'backward'
+            },
+            {
+                count: 6,
+                label: '6m',
+                step: 'month',
+                stepmode: 'backward'
+            },
+            {
+                count: 1,
+                label: '1y',
+                step: 'year',
+                stepmode: 'backward'
+            },
+            {
+                step: 'all'
+            }
+        ]}
+    },
+    yaxis: {
+        title: {text: 'Number of New Cases'}
+    },
+    hovermode: 'closest',
+    hoverlabel: {bgcolor: 'white'},
+    legend: {text: 'country'},
+};
+
+Plotly.newPlot("average-cases", main_data, layout);
+};
 </script>
 
 {% endblock %}
