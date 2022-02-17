@@ -1,0 +1,11 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: covid-africa-crt
+spec:
+  dnsNames:
+  - covid-africa.com
+  - covid-africa.info
+  secretName: covid-africa-tls
+  issuerRef:
+    name: letsencrypt-prod
