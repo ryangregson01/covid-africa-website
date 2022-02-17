@@ -19,9 +19,8 @@ spec:
         - name: config
           mountPath: /var/lib/harvester/config
           readOnly: true
-        imagePullPolicy: Never
       volumes:
       - name: config
         configMap:
           name: webapp-config
-           
+
