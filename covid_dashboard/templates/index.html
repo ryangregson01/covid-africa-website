@@ -11,7 +11,7 @@
 
 </article>
 
-<table id="all-countries-table" class="table table-striped display">
+<table id="all-countries-table" class="table table-striped">
 
 </table>
 
@@ -39,12 +39,11 @@ const request2 = fetch(dataRequest2, {
 );
 
 
-
 function create_summary_table(summaryContent) {
     var dataset = summaryContent;
     $(document).ready(function() {
         $('#all-countries-table').DataTable( {
-            "scrollY":        "200px",
+            "scrollY":        "250px",
             "scrollCollapse": true,
             "paging":         false,
             "data": dataset,
@@ -56,6 +55,38 @@ function create_summary_table(summaryContent) {
                 { "title": "New Deaths" },
                 { "title": "Vaccinated" },
                 { "title": "New Vaccinations" },
+            ],
+            columnDefs: [
+                {targets: [1,3,5],
+                    className: 'dt-center',
+                    render: function (data, type, row) {
+                        var color = 'black';
+                        return '<span style="color:' + color + '">' + data + '</span>';
+                    }
+                },
+                {targets: [2,4],
+                    className: 'dt-center',
+                    render: function ( data, type, row ) {
+                      var color = 'black';
+                      if (data < 0) {
+                        color = 'green';
+                      } 
+                      if (data > 0) {
+                        color = 'red';
+                      }
+                      return '<span style="color:' + color + '">' + data + '</span>';
+                    }
+                },
+                {targets: 6,
+                    className: 'dt-center',
+                    render: function ( data, type, row ) {
+                      var color = 'black';
+                      if (data > 0) {
+                        color = 'green';
+                      }
+                      return '<span style="color:' + color + '">' + data + '</span>';
+                    }
+                }
             ]
         } );
     } );
