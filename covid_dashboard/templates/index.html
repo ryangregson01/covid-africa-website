@@ -14,23 +14,31 @@
 <div class="weekly-update-container">
     <div class="box">
       <div class="box-head">Largest Case Increase This Week</div>
-      <span id="case-country"></span>
-      <span id='case-num'></span>
+      <div class="box-body">
+        <span id="case-country"></span>
+        <span id='case-num'></span>
+      </div>
     </div>
     <div class="box">
       <div class="box-head">Most Vaccinations Given This Week</div>
-      <span id="vacc-country"></span>
-      <span id='vacc-num'></span>
+      <div class="box-body">
+        <span id="vacc-country"></span>
+        <span id='vacc-num'></span>
+      </div>
     </div>
     <div class="box">
       <div class="box-head">Most COVID-19 Deaths This Week</div>
-      <span id="death-country"></span>
-      <span id="death-num"></span>
+      <div class="box-body">
+        <span id="death-country"></span>
+        <span id="death-num"></span>
+      </div>
     </div>
     <div class="box">
       <div class="box-head">Most Hospitalizations This Week</div>
-      <span id="hosp-country"></span>
-      <span id="hosp-num"></span>
+      <div class="box-body">
+        <span id="hosp-country"></span>
+        <span id="hosp-num"></span>
+      </div>
     </div>
   </div>
 
@@ -46,8 +54,8 @@
 
 <script>
 
-let dataRequest2 = new Request('{% url 'dashboard:get_summary_data' %}');
-const request2 = fetch(dataRequest2, {
+let summaryRequest = new Request('{% url 'dashboard:get_summary_data' %}');
+const request2 = fetch(summaryRequest, {
         method: 'GET',
         mode: 'same-origin',
         cache: 'default'
@@ -114,6 +122,32 @@ function create_summary_table(summaryContent) {
             ]
         } );
     } );
+}
+
+let weeklyMaxRequest = new Request('{% url 'dashboard:get_weekly_maxs' %}');
+const request3 = fetch(weeklyMaxRequest, {
+        method: 'GET',
+        mode: 'same-origin',
+        cache: 'default'
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then((content) => {
+                insert_weekly_maxs(content);
+            });
+        } else {
+            console.log("Failed to retrieve COVID-19 data.");
+        }
+    }
+);
+
+function insert_weekly_maxs(weeklyMaxsContent) {
+    var dataset = weeklyMaxsContent;
+    $("#case-country").html(dataset[0][0]);
+    document.getElementById("case-num").innerHTML="+"+dataset[0][1];
+    document.getElementById("death-country").innerHTML=dataset[1][0];
+    document.getElementById("death-num").innerHTML="+"+dataset[1][1];
+    document.getElementById("vacc-country").innerHTML=dataset[2][0];
+    document.getElementById("vacc-num").innerHTML="+"+dataset[2][1];
 }
 
 let dataRequest = new Request('{% url 'dashboard:get_covid_data' %}');

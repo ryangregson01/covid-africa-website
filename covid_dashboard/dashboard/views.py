@@ -45,3 +45,36 @@ def get_summary_data(request):
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
+
+def get_weekly_maxs(request):
+    results = ch_client.execute("""
+        (SELECT TOP 1
+            Location,
+            ceil(AVG(NewCasesPerMil)) AS newCases
+        FROM covid19.updates
+        WHERE Continent='Africa' AND UpdateDate>=today() - 7
+        GROUP BY Location
+        ORDER BY newCases DESC)
+        UNION ALL
+        (SELECT TOP 1
+            Location,
+            ceil(AVG(NewDeathsPerMil)) AS newDeaths
+        FROM covid19.updates
+        WHERE Continent='Africa' AND UpdateDate>=today() - 7
+        GROUP BY Location
+        ORDER BY newDeaths DESC)
+        UNION ALL
+        (SELECT TOP 1
+            Location,
+            ceil(AVG(NewVaccinationsSmoothPerMil)) AS newVacc
+        FROM covid19.updates
+        WHERE Continent='Africa' AND UpdateDate>=today() - 7
+        GROUP BY Location
+        ORDER BY newVacc DESC)
+    """)
+    
+    
+    # nested query, inner to find max, outer to get country
+    # inner gets max num and outer finds corresponding country
+    return JsonResponse(results, safe=False,
+                        json_dumps_params={"default": str})
