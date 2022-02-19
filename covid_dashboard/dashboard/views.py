@@ -46,6 +46,7 @@ def get_summary_data(request):
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
 
+
 def get_weekly_maxs(request):
     results = ch_client.execute("""
         (SELECT TOP 1
@@ -72,9 +73,5 @@ def get_weekly_maxs(request):
         GROUP BY Location
         ORDER BY newVacc DESC)
     """)
-    
-    
-    # nested query, inner to find max, outer to get country
-    # inner gets max num and outer finds corresponding country
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
