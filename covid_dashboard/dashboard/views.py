@@ -45,3 +45,22 @@ def get_summary_data(request):
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
+
+
+def get_vaccinated_percentage(request):
+    results = ch_client.execute("""
+        SELECT
+            Location,
+            MAX(PeopleVaccinated) AS FirstVaccine,
+            MAX(PeopleFullyVaccinated) AS FullyVaccinated,
+            MAX(Population) AS Population,
+            ceil(FirstVaccine / Population * 100) AS PercentOneDose,
+            ceil(FullyVaccinated / Population * 100) AS PercentTwoDose
+        FROM covid19.updates
+        WHERE Continent='Africa'
+        GROUP BY
+            Location
+        ORDER BY Location ASC;
+    """)
+    return JsonResponse(results, safe=False,
+                        json_dumps_params={"default": str})

@@ -241,3 +241,67 @@ var layout = {
 
 Plotly.newPlot("average-cases", main_data, layout);
 };
+
+
+function draw_countries_vaccinations(content) {
+    var location_vaccines = {};
+
+    content.forEach((row) => {
+        var location_ = row[0];
+        var first_dose = row[4];
+        var second_dose = row[5];
+
+        var cur_location = location_vaccines[location_];
+        if (cur_location === undefined) {
+            location_vaccines[location_] = {
+                name: location_,
+                first_dose: first_dose,
+                second_dose: second_dose
+            };
+        }
+    });
+
+    main_data = []
+    var country_names = Object.keys(location_vaccines);
+    for (var i=country_names.length-1; i >= 0; i -= 1) {
+        var country = country_names[i]
+        var percentage_first_dose = location_vaccines[country].first_dose
+
+        var data = [{
+            type: 'bar',
+            name: country,
+            meta: [country],
+            x: [percentage_first_dose],
+            y: [country],
+            orientation: 'h',
+            text: percentage_first_dose,
+            textposition: 'outside',
+            marker: {
+                color: 'orange'
+            },
+            hovertemplate: 'First Dose<br><b>%{meta[0]}:</b> %{x}%<extra></extra>',
+        }];
+
+        main_data.push(data[0])
+    }
+
+    var layout = {
+        barmode: 'group',
+        title: 'Vaccination Coverage by Country',
+        height: 1000,
+        legend: {'traceorder':'reversed'},
+        xaxis: {
+            'range': [0, 100],
+            'zeroline': false,
+            'visible':false
+        },
+        yaxis: {
+            bargap: 0.5,
+            'showgrid':true
+        },
+        hovermode: 'closest'
+    };
+
+    Plotly.newPlot("countries-vaccinations", main_data, layout);
+
+};
