@@ -48,7 +48,7 @@
 
 <script>
 let summarydataRequest = new Request('{% url 'dashboard:get_summary_data' %}');
-const request_summary = fetch(summarydataRequest, {
+const summaryRequest = fetch(summarydataRequest, {
         method: 'GET',
         mode: 'same-origin',
         cache: 'default'
