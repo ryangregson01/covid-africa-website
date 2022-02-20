@@ -2,7 +2,7 @@
 .weekly-update-container {
     margin: 20px auto;
     width: fit-content;
-    height: 400px;
+    height:auto;
     display: grid;
     grid-template-columns: 200px 200px;
     grid-row: auto auto;
@@ -25,7 +25,7 @@
 }
 
 .box span {
-    font-size: 18px;
+    font-size: 13px;
     z-index: 2;
     padding-top: 5%;
 }
@@ -42,5 +42,5 @@
 .box-body {
     display:flex; 
     flex-direction:column;
-    padding-block: 30%;
+    padding-block: 15%;
 }

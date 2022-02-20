@@ -52,13 +52,22 @@ function create_summary_table(summaryContent) {
 
 
 function insert_weekly_maxs(weeklyMaxsContent) {
-    var dataset = weeklyMaxsContent;
-    $("#case-country").html(dataset[0][0]);
-    document.getElementById("case-num").innerHTML="+"+dataset[0][1];
-    document.getElementById("death-country").innerHTML=dataset[1][0];
-    document.getElementById("death-num").innerHTML="+"+dataset[1][1];
-    document.getElementById("vacc-country").innerHTML=dataset[2][0];
-    document.getElementById("vacc-num").innerHTML="+"+dataset[2][1];
+    var box_type = ["case", "death", "vacc"];
+    weeklyMaxsContent.forEach((item, index) => {
+        var i = Math.floor(index / 5) // first 5 use "case", next 5 use "death"...
+
+        var newDiv = document.createElement('div')
+        
+        var boxSpanCountry = document.createElement('span')
+        boxSpanCountry.innerHTML = item[0];
+
+        var boxSpanNum = document.createElement('span')
+        boxSpanNum.innerHTML = "  +"+item[1];
+       
+        newDiv.appendChild(boxSpanCountry);
+        newDiv.appendChild(boxSpanNum);
+        document.getElementById(box_type[i] + '-box').appendChild(newDiv);
+    });
 }
 
 

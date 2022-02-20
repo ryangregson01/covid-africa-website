@@ -14,30 +14,26 @@
 <div class="weekly-update-container">
     <div class="box">
       <div class="box-head">Largest Case Increase This Week</div>
-      <div class="box-body">
-        <span id="case-country"></span>
-        <span id='case-num'></span>
+      <div id="case-box" class="box-body">
+
       </div>
     </div>
     <div class="box">
       <div class="box-head">Most Vaccinations Given This Week</div>
-      <div class="box-body">
-        <span id="vacc-country"></span>
-        <span id='vacc-num'></span>
+      <div id="vacc-box" class="box-body">
+ 
       </div>
     </div>
     <div class="box">
-      <div class="box-head">Most COVID-19 Deaths This Week</div>
-      <div class="box-body">
-        <span id="death-country"></span>
-        <span id="death-num"></span>
+      <div class="box-head">Most Deaths This Week</div>
+      <div id="death-box" class="box-body">
+
       </div>
     </div>
     <div class="box">
       <div class="box-head">Most Hospitalizations This Week</div>
-      <div class="box-body">
-        <span id="hosp-country"></span>
-        <span id="hosp-num"></span>
+      <div id="vacc-box" class="box-body">
+
       </div>
     </div>
   </div>
@@ -51,8 +47,8 @@
 </article>
 
 <script>
-let summaryRequest = new Request('{% url 'dashboard:get_summary_data' %}');
-const request2 = fetch(summaryRequest, {
+let summarydataRequest = new Request('{% url 'dashboard:get_summary_data' %}');
+const request_summary = fetch(summarydataRequest, {
         method: 'GET',
         mode: 'same-origin',
         cache: 'default'
@@ -68,7 +64,7 @@ const request2 = fetch(summaryRequest, {
 );
 
 let weeklyMaxRequest = new Request('{% url 'dashboard:get_weekly_maxs' %}');
-const request3 = fetch(weeklyMaxRequest, {
+const request_weeklyMax = fetch(weeklyMaxRequest, {
         method: 'GET',
         mode: 'same-origin',
         cache: 'default'

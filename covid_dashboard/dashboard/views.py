@@ -49,7 +49,7 @@ def get_summary_data(request):
 
 def get_weekly_maxs(request):
     results = ch_client.execute("""
-        (SELECT TOP 1
+        (SELECT TOP 5
             Location,
             ceil(AVG(NewCasesPerMil)) AS newCases
         FROM covid19.updates
@@ -57,7 +57,7 @@ def get_weekly_maxs(request):
         GROUP BY Location
         ORDER BY newCases DESC)
         UNION ALL
-        (SELECT TOP 1
+        (SELECT TOP 5
             Location,
             ceil(AVG(NewDeathsPerMil)) AS newDeaths
         FROM covid19.updates
@@ -65,7 +65,7 @@ def get_weekly_maxs(request):
         GROUP BY Location
         ORDER BY newDeaths DESC)
         UNION ALL
-        (SELECT TOP 1
+        (SELECT TOP 5
             Location,
             ceil(AVG(NewVaccinationsSmoothPerMil)) AS newVacc
         FROM covid19.updates
