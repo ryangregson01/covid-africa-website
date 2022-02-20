@@ -251,6 +251,13 @@ function draw_countries_vaccinations(content) {
         var first_dose = row[4];
         var second_dose = row[5];
 
+        if (first_dose == null) {
+            first_dose = 0
+        }
+        if (second_dose == null) {
+            second_dose = 0
+        }
+
         var cur_location = location_vaccines[location_];
         if (cur_location === undefined) {
             location_vaccines[location_] = {
@@ -266,6 +273,7 @@ function draw_countries_vaccinations(content) {
     for (var i=country_names.length-1; i >= 0; i -= 1) {
         var country = country_names[i]
         var percentage_first_dose = location_vaccines[country].first_dose
+        var percentage_second_dose = location_vaccines[country].second_dose
 
         var data = [{
             type: 'bar',
@@ -274,15 +282,36 @@ function draw_countries_vaccinations(content) {
             x: [percentage_first_dose],
             y: [country],
             orientation: 'h',
-            text: percentage_first_dose,
+            text: percentage_first_dose + '%',
             textposition: 'outside',
             marker: {
                 color: 'orange'
             },
-            hovertemplate: 'First Dose<br><b>%{meta[0]}:</b> %{x}%<extra></extra>',
+            hovertemplate: '<b><span style="color:orange">First Dose</span><br>%{meta[0]}:</b> %{x}%<extra></extra>',
+            legendgroup: country
         }];
 
+        var data2 = [{
+            type: 'bar',
+            name: country,
+            meta: [country],
+            x: [percentage_second_dose],
+            y: [country],
+            xaxis: 'x2',
+            yaxis: 'y',
+            orientation: 'h',
+            text: percentage_second_dose + '%',
+            textposition: 'outside',
+            marker: {
+                color: 'green'
+            },
+            hovertemplate: '<b><span style="color:green">Second Dose</span><br>%{meta[0]}:</b> %{x}%<extra></extra>',
+            legendgroup: country,
+            showlegend: false
+        }]
+
         main_data.push(data[0])
+        main_data.push(data2[0])
     }
 
     var layout = {
@@ -290,15 +319,26 @@ function draw_countries_vaccinations(content) {
         title: 'Vaccination Coverage by Country',
         height: 1000,
         legend: {'traceorder':'reversed'},
+        grid: {
+            columns: 2,
+            subplots:[['xy', 'x2y']],
+            roworder:'bottom to top'
+        },
         xaxis: {
             'range': [0, 100],
             'zeroline': false,
             'visible':false
         },
+        xaxis2: {
+            'range': [0, 100],
+            'zeroline': false,
+            'visible': false
+        },
         yaxis: {
             bargap: 0.5,
             'showgrid':true
         },
+        hoverlabel: {bgcolor: 'white'},
         hovermode: 'closest'
     };
 
