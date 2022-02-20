@@ -51,8 +51,8 @@
 </article>
 
 <script>
-let summaryRequest = new Request('{% url 'dashboard:get_summary_data' %}');
-const request2 = fetch(summaryRequest, {
+let summarydataRequest = new Request('{% url 'dashboard:get_summary_data' %}');
+const summaryRequest = fetch(summarydataRequest, {
         method: 'GET',
         mode: 'same-origin',
         cache: 'default'
@@ -67,6 +67,7 @@ const request2 = fetch(summaryRequest, {
     }
 );
 
+<<<<<<< covid_dashboard/templates/index.html
 let weeklyMaxRequest = new Request('{% url 'dashboard:get_weekly_maxs' %}');
 const request3 = fetch(weeklyMaxRequest, {
         method: 'GET',
@@ -83,6 +84,8 @@ const request3 = fetch(weeklyMaxRequest, {
     }
 );
 
+=======
+>>>>>>> covid_dashboard/templates/index.html
 let dataRequest = new Request('{% url 'dashboard:get_covid_data' %}');
 const request = fetch(dataRequest, {
         method: 'GET',
