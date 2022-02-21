@@ -53,9 +53,11 @@ def get_vaccinated_percentage(request):
             Location,
             MAX(PeopleVaccinated) AS FirstVaccine,
             MAX(PeopleFullyVaccinated) AS FullyVaccinated,
+            MAX(TotalBoosters) AS BoosterVaccine,
             MAX(Population) AS Population,
             ceil(FirstVaccine / Population * 100) AS PercentOneDose,
-            ceil(FullyVaccinated / Population * 100) AS PercentTwoDose
+            ceil(FullyVaccinated / Population * 100) AS PercentTwoDose,
+            ceil(BoosterVaccine / Population * 100) AS PercentThreeDose
         FROM covid19.updates
         WHERE Continent='Africa'
         GROUP BY

@@ -242,14 +242,14 @@ var layout = {
 Plotly.newPlot("average-cases", main_data, layout);
 };
 
-
 function draw_countries_vaccinations(content) {
     var location_vaccines = {};
 
     content.forEach((row) => {
         var location_ = row[0];
-        var first_dose = row[4];
-        var second_dose = row[5];
+        var first_dose = row[5];
+        var second_dose = row[6];
+        var third_dose = row[7];
 
         if (first_dose == null) {
             first_dose = 0
@@ -257,13 +257,17 @@ function draw_countries_vaccinations(content) {
         if (second_dose == null) {
             second_dose = 0
         }
+        if (third_dose == null) {
+            third_dose = 0
+        }
 
         var cur_location = location_vaccines[location_];
         if (cur_location === undefined) {
             location_vaccines[location_] = {
                 name: location_,
                 first_dose: first_dose,
-                second_dose: second_dose
+                second_dose: second_dose,
+                third_dose: third_dose
             };
         }
     });
@@ -274,8 +278,9 @@ function draw_countries_vaccinations(content) {
         var country = country_names[i]
         var percentage_first_dose = location_vaccines[country].first_dose
         var percentage_second_dose = location_vaccines[country].second_dose
+        var percentage_third_dose = location_vaccines[country].third_dose
 
-        var data = [{
+        var first_dose_data = {
             type: 'bar',
             name: country,
             meta: [country],
@@ -287,11 +292,12 @@ function draw_countries_vaccinations(content) {
             marker: {
                 color: 'orange'
             },
-            hovertemplate: '<b><span style="color:orange">First Dose</span><br>%{meta[0]}:</b> %{x}%<extra></extra>',
+            hovertemplate: '<b><span style="color:orange">First Dose</span>\
+                            <br>%{meta[0]}:</b> %{x}%<extra></extra>',
             legendgroup: country
-        }];
+        };
 
-        var data2 = [{
+        var second_dose_data = {
             type: 'bar',
             name: country,
             meta: [country],
@@ -305,13 +311,35 @@ function draw_countries_vaccinations(content) {
             marker: {
                 color: 'green'
             },
-            hovertemplate: '<b><span style="color:green">Second Dose</span><br>%{meta[0]}:</b> %{x}%<extra></extra>',
+            hovertemplate: '<b><span style="color:green">Second Dose</span>\
+                            <br>%{meta[0]}:</b> %{x}%<extra></extra>',
             legendgroup: country,
             showlegend: false
-        }]
+        }
 
-        main_data.push(data[0])
-        main_data.push(data2[0])
+        var third_dose_data = {
+            type: 'bar',
+            name: country,
+            meta: [country],
+            x: [percentage_third_dose],
+            y: [country],
+            xaxis: 'x3',
+            yaxis: 'y',
+            orientation: 'h',
+            text: percentage_third_dose + '%',
+            textposition: 'outside',
+            marker: {
+                color: 'brown'
+            },
+            hovertemplate: '<b><span style="color:brown">Third Dose</span>\
+                            <br>%{meta[0]}:</b> %{x}%<extra></extra>',
+            legendgroup: country,
+            showlegend: false
+        }
+
+        main_data.push(first_dose_data)
+        main_data.push(second_dose_data)
+        main_data.push(third_dose_data)
     }
 
     var layout = {
@@ -320,23 +348,53 @@ function draw_countries_vaccinations(content) {
         height: 1000,
         legend: {'traceorder':'reversed'},
         grid: {
-            columns: 2,
-            subplots:[['xy', 'x2y']],
+            columns: 3,
+            subplots:[['xy', 'x2y', 'x3y']],
             roworder:'bottom to top'
         },
         xaxis: {
             'range': [0, 100],
             'zeroline': false,
-            'visible':false
+            'showticklabels': false,
+            'visible': true,
+            side: 'top',
+            title: {
+                text: 'First Dose',
+                font: {
+                    color: 'orange',
+                }
+            }
         },
         xaxis2: {
             'range': [0, 100],
             'zeroline': false,
-            'visible': false
+            'showticklabels': false,
+            'visible': true,
+            side: 'top',
+            title: {
+                text: 'Second Dose',
+                font: {
+                    color: 'green'
+                }
+            }
+        },
+        xaxis3: {
+            'range': [0, 100],
+            'zeroline': false,
+            'showticklabels': false,
+            'visible': true,
+            side: 'top',
+            title: {
+                text: 'Third Dose',
+                font: {
+                    color: 'brown'
+                }
+            }
         },
         yaxis: {
             bargap: 0.5,
-            'showgrid':true
+            'showgrid':true,
+            automargin: true
         },
         hoverlabel: {bgcolor: 'white'},
         hovermode: 'closest'
