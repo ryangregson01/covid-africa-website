@@ -51,6 +51,18 @@
 
 </article>
 
+<div align="center" id="weekly-vaccines">
+    <div>Number of New Vaccinations per Week (per 100k)</div>
+    <br>
+    <div class="dropdown-button">
+        Use drop-down menu to view a country's administered vaccinations:
+        <select class="countryChoice"></select>
+    </div>
+    <article id="country-new-vaccinations" class="graph">
+
+    </article>
+</div>
+
 <script>
 let summarydataRequest = new Request('{% url 'dashboard:get_summary_data' %}');
 const summaryRequest = fetch(summarydataRequest, {
@@ -117,6 +129,21 @@ const vaccine_request = fetch(vaccineDataRequest, {
     }
 );
 
+let weeklyVaccinationDataRequest = new Request("{% url 'dashboard:get_new_vaccinated_data' %}");
+const weekly_vaccine_request = fetch(weeklyVaccinationDataRequest, {
+        method: 'GET',
+        mode: 'same-origin',
+        cache: 'default'
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then((content) => {
+                draw_country_new_vaccinations(content);
+            });
+        } else {
+            console.log("Failed to retrieve COVID-19 data.");
+        }
+    }
+);
 </script>
 
 {% endblock %}
