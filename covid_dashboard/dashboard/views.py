@@ -2,7 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from clickhouse_driver import Client
 
-ch_client = Client("covid-database")
+
+def get_db_conn():
+    return Client("covid-database")
 
 
 def index(request):
@@ -10,7 +12,7 @@ def index(request):
 
 
 def get_covid_data(request):
-    results = ch_client.execute("""
+    results = get_db_conn().execute("""
         SELECT
             Location,
             toStartOfWeek(UpdateDate) AS Week,
@@ -27,7 +29,7 @@ def get_covid_data(request):
 
 
 def get_summary_data(request):
-    results = ch_client.execute("""
+    results = get_db_conn().execute("""
         SELECT
             Location,
             MAX(TotalCases) AS Cases,
@@ -48,7 +50,7 @@ def get_summary_data(request):
 
 
 def get_vaccinated_percentage(request):
-    results = ch_client.execute("""
+    results = get_db_conn().execute("""
         SELECT
             Location,
             MAX(PeopleVaccinated) AS FirstVaccine,
