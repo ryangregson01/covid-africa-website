@@ -31,16 +31,38 @@ def get_summary_data(request):
         SELECT
             Location,
             MAX(TotalCases) AS Cases,
-            MAX(NewCases) AS NewCases,
+            ceil(avg(NewCasesPerMil)) AS NewCases,
             MAX(TotalDeaths) AS TotalDeaths,
-            MAX(NewDeaths) AS NewDeaths,
+            ceil(avg(NewDeathsPerMil)) AS NewDeaths,
             MAX(TotalVaccinations) AS Vaccinations,
-            MAX(NewVaccinations) AS NewTotalVaccinations
+            ceil(avg(NewVaccinationsSmoothPerMil)) AS NewVaccinations
+        FROM covid19.updates
+        WHERE
+            Continent='Africa' AND UpdateDate>=today() - 7
+        GROUP BY
+            Location
+        ORDER BY Location DESC;
+    """)
+    return JsonResponse(results, safe=False,
+                        json_dumps_params={"default": str})
+
+
+def get_vaccinated_percentage(request):
+    results = ch_client.execute("""
+        SELECT
+            Location,
+            MAX(PeopleVaccinated) AS FirstVaccine,
+            MAX(PeopleFullyVaccinated) AS FullyVaccinated,
+            MAX(TotalBoosters) AS BoosterVaccine,
+            MAX(Population) AS Population,
+            ceil(FirstVaccine / Population * 100) AS PercentOneDose,
+            ceil(FullyVaccinated / Population * 100) AS PercentTwoDose,
+            ceil(BoosterVaccine / Population * 100) AS PercentThreeDose
         FROM covid19.updates
         WHERE Continent='Africa'
         GROUP BY
             Location
-        ORDER BY Location DESC;
+        ORDER BY Location ASC;
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
