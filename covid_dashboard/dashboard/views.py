@@ -71,12 +71,12 @@ def get_vaccinated_percentage(request):
 
 
 def get_new_vaccinated_data(request):
-    results = ch_client.execute("""
+    results = get_db_conn().execute("""
         SELECT
             Location,
             toStartOfWeek(UpdateDate) AS Week,
             ceil(avg(NewVaccinationsSmoothPerMil)) AS AvgNewVaccinations,
-            AvgNewVaccinations / 10 AS NewVaccinationsPerHun
+            ceil(AvgNewVaccinations / 10) AS NewVaccinationsPerHun
         FROM covid19.updates
         WHERE Continent='Africa'
         GROUP BY
