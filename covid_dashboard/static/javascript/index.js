@@ -433,87 +433,94 @@ function draw_country_new_vaccinations(content) {
         }
     });
 
-    // Default Country Data
-    setPlot('South Africa', location_vaccinations)
+    // Default Country Data for countries ordered alphabetically
+    setPlot('Algeria')
 
+    function setPlot(countryName) {
+
+        var main_data = []
+        var country = countryName
+        var xValues = location_vaccinations[country].date_recorded
+        var yValues = location_vaccinations[country].vaccine_data
+    
+    
+        var data = {
+            type: 'bar',
+            name: country,
+            meta: [country],
+            x: xValues,
+            y: yValues,
+            hovertemplate: '%{x} <br> %{meta[0]}: %{y} vaccinations <extra></extra>'
+        };
+    
+        main_data.push(data)
+        
+        var layout = {
+            height: 600,
+            xaxis: {
+                showgrid: false,
+                linecolor: 'black',
+                rangeselector: {buttons: [
+                    {
+                        count: 1,
+                        label: '1m',
+                        step: 'month',
+                        stepmode: 'backward'
+                    },
+                    {
+                        count: 3,
+                        label: '3m',
+                        step: 'month',
+                        stepmode: 'backward',
+                        selected: true
+                    },
+                    {
+                        count: 6,
+                        label: '6m',
+                        step: 'month',
+                        stepmode: 'backward'
+                    },
+                    {
+                        count: 1,
+                        label: '1y',
+                        step: 'year',
+                        stepmode: 'backward'
+                    },
+                    {
+                        step: 'all'
+                    }
+                ]}
+            },
+            yaxis: {
+                title: {text: 'Number of New Vaccinations'}
+            },
+            hovermode: 'closest',
+            hoverlabel: {bgcolor: 'white'},
+            legend: {text: 'country'},
+        };
+        
+        Plotly.newPlot("country-new-vaccinations", main_data, layout);
+    };
+
+    // Drop-down button from https://plotly.com/javascript/dropdowns/
     var weeklyVaccinationContainer = document.querySelector('#weekly-vaccines'),
         countrySelector = weeklyVaccinationContainer.querySelector('.countryChoice');
 
     var listofCountries = Object.keys(location_vaccinations);
     listofCountries.sort();
     assignOptions(listofCountries, countrySelector);
-
-};
-
-function assignOptions(textArray, selector) {
-    for (var i = 0; i < textArray.length; i++) {
-        var currentOption = document.createElement('option');
-        currentOption.text = textArray[i];
-        selector.appendChild(currentOption);
+    countrySelector.addEventListener('change', updateCountry, false);
+    
+    function assignOptions(textArray, selector) {
+        for (var i = 0; i < textArray.length; i++) {
+            var currentOption = document.createElement('option');
+            currentOption.text = textArray[i];
+            selector.appendChild(currentOption);
+        }
     }
-}
-
-function setPlot(countryName, location_vaccinations) {
-    var main_data = []
-    var country = countryName
-    var xValues = location_vaccinations[country].date_recorded
-    var yValues = location_vaccinations[country].vaccine_data
-
-
-    var data = {
-        type: 'bar',
-        name: country,
-        meta: [country],
-        x: xValues,
-        y: yValues,
-        hovertemplate: '%{x} <br> %{meta[0]}: %{y} vaccinations <extra></extra>'
-    };
-
-    main_data.push(data)
     
-    var layout = {
-        height: 600,
-        xaxis: {
-            showgrid: false,
-            linecolor: 'black',
-            rangeselector: {buttons: [
-                {
-                    count: 1,
-                    label: '1m',
-                    step: 'month',
-                    stepmode: 'backward'
-                },
-                {
-                    count: 3,
-                    label: '3m',
-                    step: 'month',
-                    stepmode: 'backward',
-                    selected: true
-                },
-                {
-                    count: 6,
-                    label: '6m',
-                    step: 'month',
-                    stepmode: 'backward'
-                },
-                {
-                    count: 1,
-                    label: '1y',
-                    step: 'year',
-                    stepmode: 'backward'
-                },
-                {
-                    step: 'all'
-                }
-            ]}
-        },
-        yaxis: {
-            title: {text: 'Number of New Vaccinations'}
-        },
-        hovermode: 'closest',
-        hoverlabel: {bgcolor: 'white'},
-        legend: {text: 'country'},
-    };
-    
-    Plotly.newPlot("country-new-vaccinations", main_data, layout);
+    function updateCountry() {
+        setPlot(countrySelector.value);
+    }
+
 };
