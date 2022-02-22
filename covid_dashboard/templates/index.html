@@ -24,9 +24,17 @@
 
 </article>
 
-<article id="country-new-vaccinations" class="graph">
+<div align="center" id="weekly-vaccines">
+    <div>Average Number of New Vaccinations per Week</div>
+    <br>
+    <div class="dropdown-button">
+        Use drop-down menu to view a country's administered vaccinations: 
+        <select class="countryChoice"></select>
+    </div>
+    <article id="country-new-vaccinations" class="graph">
 
-</article>
+    </article>
+</div>
 
 <script>
 let summarydataRequest = new Request('{% url 'dashboard:get_summary_data' %}');

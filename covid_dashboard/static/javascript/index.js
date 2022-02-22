@@ -435,12 +435,26 @@ function draw_country_new_vaccinations(content) {
 
     // Default Country Data
     setPlot('South Africa', location_vaccinations)
+
+    var weeklyVaccinationContainer = document.querySelector('#weekly-vaccines'),
+        countrySelector = weeklyVaccinationContainer.querySelector('.countryChoice');
+
+    var listofCountries = Object.keys(location_vaccinations);
+    listofCountries.sort();
+    assignOptions(listofCountries, countrySelector);
+
 };
+
+function assignOptions(textArray, selector) {
+    for (var i = 0; i < textArray.length; i++) {
+        var currentOption = document.createElement('option');
+        currentOption.text = textArray[i];
+        selector.appendChild(currentOption);
+    }
+}
 
 function setPlot(countryName, location_vaccinations) {
     var main_data = []
-    var countryName = countryName
-
     var country = countryName
     var xValues = location_vaccinations[country].date_recorded
     var yValues = location_vaccinations[country].vaccine_data
@@ -458,7 +472,6 @@ function setPlot(countryName, location_vaccinations) {
     main_data.push(data)
     
     var layout = {
-        title: 'Average Number of New Vaccinations per Week',
         height: 600,
         xaxis: {
             showgrid: false,
