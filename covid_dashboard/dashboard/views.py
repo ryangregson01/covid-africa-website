@@ -73,7 +73,8 @@ def get_new_vaccinated_data(request):
         SELECT
             Location,
             toStartOfWeek(UpdateDate) AS Week,
-            ceil(avg(NewVaccinations)) AS AvgNewVaccinations
+            ceil(avg(NewVaccinationsSmoothPerMil)) AS AvgNewVaccinations,
+            AvgNewVaccinations / 10 AS NewVaccinationsPerHun
         FROM covid19.updates
         WHERE Continent='Africa'
         GROUP BY

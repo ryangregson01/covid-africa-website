@@ -413,7 +413,7 @@ function draw_country_new_vaccinations(content) {
     content.forEach((row) => {
         var location_ = row[0];
         var datestamp = row[1];
-        var n_vaccines = row[2];
+        var n_vaccines = row[3];
     
         var cur_location = location_vaccinations[location_];
         if (cur_location === undefined) {
