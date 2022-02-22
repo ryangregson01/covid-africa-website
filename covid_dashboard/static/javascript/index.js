@@ -401,5 +401,106 @@ function draw_countries_vaccinations(content) {
     };
 
     Plotly.newPlot("countries-vaccinations", main_data, layout);
+};
 
+
+function draw_country_new_vaccinations(content) {
+
+    var location_vaccinations = {};
+    var dates = [];
+    var last_date = undefined;
+    
+    content.forEach((row) => {
+        var location_ = row[0];
+        var datestamp = row[1];
+        var n_vaccines = row[2];
+    
+        var cur_location = location_vaccinations[location_];
+        if (cur_location === undefined) {
+            location_vaccinations[location_] = {
+                name: location_,
+                vaccine_data: [n_vaccines],
+                date_recorded: [datestamp]
+            };
+        } else {
+            cur_location.vaccine_data.push(n_vaccines);
+            cur_location.date_recorded.push(datestamp);
+        }
+    
+        if (datestamp != last_date) {
+            last_date = datestamp;
+            dates.push(datestamp);
+        }
+    });
+
+    // Default Country Data
+    setPlot('South Africa', location_vaccinations)
+};
+
+function setPlot(countryName, location_vaccinations) {
+    var main_data = []
+    var countryName = countryName
+
+    var country = countryName
+    var xValues = location_vaccinations[country].date_recorded
+    var yValues = location_vaccinations[country].vaccine_data
+
+
+    var data = {
+        type: 'bar',
+        name: country,
+        meta: [country],
+        x: xValues,
+        y: yValues,
+        hovertemplate: '%{x} <br> %{meta[0]}: %{y} vaccinations <extra></extra>'
+    };
+
+    main_data.push(data)
+    
+    var layout = {
+        title: 'Average Number of New Vaccinations per Week',
+        height: 600,
+        xaxis: {
+            showgrid: false,
+            linecolor: 'black',
+            rangeselector: {buttons: [
+                {
+                    count: 1,
+                    label: '1m',
+                    step: 'month',
+                    stepmode: 'backward'
+                },
+                {
+                    count: 3,
+                    label: '3m',
+                    step: 'month',
+                    stepmode: 'backward',
+                    selected: true
+                },
+                {
+                    count: 6,
+                    label: '6m',
+                    step: 'month',
+                    stepmode: 'backward'
+                },
+                {
+                    count: 1,
+                    label: '1y',
+                    step: 'year',
+                    stepmode: 'backward'
+                },
+                {
+                    step: 'all'
+                }
+            ]}
+        },
+        yaxis: {
+            title: {text: 'Number of New Vaccinations'}
+        },
+        hovermode: 'closest',
+        hoverlabel: {bgcolor: 'white'},
+        legend: {text: 'country'},
+    };
+    
+    Plotly.newPlot("country-new-vaccinations", main_data, layout);
 };

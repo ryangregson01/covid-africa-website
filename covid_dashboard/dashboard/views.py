@@ -66,3 +66,20 @@ def get_vaccinated_percentage(request):
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
+
+
+def get_new_vaccinated_data(request):
+    results = ch_client.execute("""
+        SELECT
+            Location,
+            toStartOfWeek(UpdateDate) AS Week,
+            ceil(avg(NewVaccinations)) AS AvgNewVaccinations
+        FROM covid19.updates
+        WHERE Continent='Africa'
+        GROUP BY
+            Location,
+            Week
+        ORDER BY Week ASC;
+    """)
+    return JsonResponse(results, safe=False,
+                        json_dumps_params={"default": str})
