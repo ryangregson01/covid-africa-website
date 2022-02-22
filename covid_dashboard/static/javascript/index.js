@@ -56,17 +56,14 @@ function insert_weekly_maxs(weeklyMaxsContent) {
     weeklyMaxsContent.forEach((item, index) => {
         var i = Math.floor(index / 5) // first 5 use "case", next 5 use "death"...
 
-        var newDiv = document.createElement('div')
-        
-        var boxSpanCountry = document.createElement('span')
-        boxSpanCountry.innerHTML = item[0];
+        var table = document.getElementById(box_type[i] + '-table');
+        var newRow = table.insertRow(-1);
 
-        var boxSpanNum = document.createElement('span')
-        boxSpanNum.innerHTML = "  +"+item[1];
-       
-        newDiv.appendChild(boxSpanCountry);
-        newDiv.appendChild(boxSpanNum);
-        document.getElementById(box_type[i] + '-box').appendChild(newDiv);
+        var countryCol = newRow.insertCell(0);
+        var numCol = newRow.insertCell(1);
+
+        countryCol.innerHTML = item[0];
+        numCol.innerHTML = "+"+item[1];
     });
 }
 
