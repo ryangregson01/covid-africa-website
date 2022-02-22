@@ -25,4 +25,5 @@ urlpatterns = [
     path('summary_data', views.get_summary_data, name='get_summary_data'),
     path('vaccination_data/', views.get_vaccinated_percentage,
          name='get_vaccinated_percentage'),
+    path('weekly_max_data/', views.get_weekly_maxs, name='get_weekly_maxs'),
 ]

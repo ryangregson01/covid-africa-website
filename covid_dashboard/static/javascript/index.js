@@ -1,55 +1,72 @@
+
 function create_summary_table(summaryContent) {
     var dataset = summaryContent;
-    $(document).ready(function() {
-        $('#all-countries-table').DataTable( {
-            "scrollY":        "250px",
-            "scrollCollapse": true,
-            "paging":         false,
-            "data": dataset,
-            "columns": [
-                { "title": "Country" },
-                { "title": "Cases" },
-                { "title": "New Cases" },
-                { "title": "Deaths" },
-                { "title": "New Deaths" },
-                { "title": "Vaccinated" },
-                { "title": "New Vaccinations" },
-            ],
-            columnDefs: [
-                {targets: [1,3,5],
-                    className: 'dt-center',
-                    render: function (data, type, row) {
-                        var color = 'black';
-                        return '<span style="color:' + color + '">' + data + '</span>';
-                    }
-                },
-                {targets: [2,4],
-                    className: 'dt-center',
-                    render: function ( data, type, row ) {
-                      var color = 'black';
-                      if (data < 0) {
-                        color = 'green';
-                      } 
-                      if (data > 0) {
-                        color = 'red';
-                      }
-                      return '<span style="color:' + color + '">' + data + '</span>';
-                    }
-                },
-                {targets: 6,
-                    className: 'dt-center',
-                    render: function ( data, type, row ) {
-                      var color = 'black';
-                      if (data > 0) {
-                        color = 'green';
-                      }
-                      return '<span style="color:' + color + '">' + data + '</span>';
-                    }
+    $('#all-countries-table').DataTable( {
+        "scrollY":        "250px",
+        "scrollCollapse": true,
+        "paging":         false,
+        "data": dataset,
+        "columns": [
+            { "title": "Country" },
+            { "title": "Cases" },
+            { "title": "New Cases" },
+            { "title": "Deaths" },
+            { "title": "New Deaths" },
+            { "title": "Vaccinated" },
+            { "title": "New Vaccinations" },
+        ],
+        columnDefs: [
+            {targets: [1,3,5],
+                className: 'dt-center',
+                render: function (data, type, row) {
+                    var color = 'black';
+                    return '<span style="color:' + color + '">' + data + '</span>';
                 }
-            ]
-        } );
+            },
+            {targets: [2,4],
+                className: 'dt-center',
+                render: function ( data, type, row ) {
+                    var color = 'black';
+                    if (data < 0) {
+                    color = 'green';
+                    } 
+                    if (data > 0) {
+                    color = 'red';
+                    }
+                    return '<span style="color:' + color + '">' + data + '</span>';
+                }
+            },
+            {targets: 6,
+                className: 'dt-center',
+                render: function ( data, type, row ) {
+                    var color = 'black';
+                    if (data > 0) {
+                    color = 'green';
+                    }
+                    return '<span style="color:' + color + '">' + data + '</span>';
+                }
+            }
+        ]
     } );
 }
+
+
+function insert_weekly_maxs(weeklyMaxsContent) {
+    var box_type = ["case", "death", "vacc"];
+    weeklyMaxsContent.forEach((item, index) => {
+        var i = Math.floor(index / 5) // first 5 use "case", next 5 use "death"...
+
+        var table = document.getElementById(box_type[i] + '-table');
+        var newRow = table.insertRow(-1);
+
+        var countryCol = newRow.insertCell(0);
+        var numCol = newRow.insertCell(1);
+
+        countryCol.innerHTML = item[0];
+        numCol.innerHTML = "+"+item[1];
+    });
+}
+
 
 function draw_map(content) {
 

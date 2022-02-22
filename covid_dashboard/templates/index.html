@@ -11,10 +11,37 @@
 
 </article>
 
+<div class="weekly-update-container">
+    <div class="box">
+      <div class="box-head">Largest Case Increase This Week</div>
+      <div class="box-body">
+          <table id="case-table" class="weekly-table">
+
+          </table>
+
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-head">Most Vaccinations Given This Week</div>
+      <div class="box-body">
+        <table id="vacc-table" class="weekly-table">
+
+        </table>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-head">Most Deaths This Week</div>
+      <div class="box-body">
+        <table id="death-table" class="weekly-table">
+
+        </table>
+      </div>
+    </div>
+</div>
+
 <table id="all-countries-table" class="table table-striped">
 
 </table>
-
 
 <article id="average-cases" class="graph">
 
@@ -34,6 +61,22 @@ const summaryRequest = fetch(summarydataRequest, {
         if (response.ok) {
             response.json().then((content) => {
                 create_summary_table(content);
+            });
+        } else {
+            console.log("Failed to retrieve COVID-19 data.");
+        }
+    }
+);
+
+let weeklyMaxRequest = new Request('{% url 'dashboard:get_weekly_maxs' %}');
+const request_weeklyMax = fetch(weeklyMaxRequest, {
+        method: 'GET',
+        mode: 'same-origin',
+        cache: 'default'
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then((content) => {
+                insert_weekly_maxs(content);
             });
         } else {
             console.log("Failed to retrieve COVID-19 data.");
