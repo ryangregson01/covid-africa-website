@@ -1,26 +1,23 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: batch/v1
+kind: CronJob
 metadata:
   name: database-refresher
 spec:
-  selector:
-    matchLabels:
-      app: database-refresher
-  template:
-    metadata:
-      name: database-refresher
-      labels:
-        app: database-refresher
+  schedule: "46 17 * * *"
+  jobTemplate:
     spec:
-      containers:
-      - name: database-refresher
-        image: johnlemmon/database-refresher
-        volumeMounts:
-        - name: config
-          mountPath: /var/lib/harvester/config
-          readOnly: true
-      volumes:
-      - name: config
-        configMap:
-          name: webapp-config
-
+      template:
+        spec:
+          containers:
+          - name: database-refresher
+            image: johnlemmon/database-refresher
+            command: ["/bin/sh", "/harvester.sh"]
+            volumeMounts:
+            - name: config
+              mountPath: /var/lib/harvester/config
+              readOnly: true
+          volumes:
+          - name: config
+            configMap:
+              name: webapp-config
+          restartPolicy: Never
