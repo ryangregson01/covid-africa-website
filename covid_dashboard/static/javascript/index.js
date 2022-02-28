@@ -198,6 +198,7 @@ content.forEach((row) => {
 
 var main_data = []
 const countries = Object.keys(location_cases);
+countries.sort();
 for (var i=0; i < countries.length; i += 1) {
     var country = countries[i]
     var xValues = location_cases[country].date_recorded
