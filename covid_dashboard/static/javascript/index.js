@@ -139,6 +139,10 @@ function draw_map(content) {
             text: 'Interactive Map'
         },
 
+        legend: {
+            enabled: false
+        },
+
         /* For when data is normalised
         colorAxis: {
             minColor: '#80ff80',
