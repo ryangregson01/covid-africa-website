@@ -434,17 +434,20 @@ function draw_country_new_vaccinations(content) {
     content.forEach((row) => {
         var location_ = row[0];
         var datestamp = row[1];
-        var n_vaccines = row[3];
+        var n_vaccines = row[2];
+        var n_avg_vaccines = row[3];
     
         var cur_location = location_vaccinations[location_];
         if (cur_location === undefined) {
             location_vaccinations[location_] = {
                 name: location_,
                 vaccine_data: [n_vaccines],
+                avg_vaccine_data: [n_avg_vaccines],
                 date_recorded: [datestamp]
             };
         } else {
             cur_location.vaccine_data.push(n_vaccines);
+            cur_location.avg_vaccine_data.push(n_avg_vaccines);
             cur_location.date_recorded.push(datestamp);
         }
     
@@ -459,11 +462,11 @@ function draw_country_new_vaccinations(content) {
 
     function setPlot(countryName) {
 
-        var main_data = []
+        var main_data = [];
         var country = countryName
-        var xValues = location_vaccinations[country].date_recorded
-        var yValues = location_vaccinations[country].vaccine_data
-    
+        var xValues = location_vaccinations[country].date_recorded;
+        var yValues = location_vaccinations[country].vaccine_data;
+        var avgValues = location_vaccinations[country].avg_vaccine_data;
     
         var data = {
             type: 'bar',
@@ -471,7 +474,9 @@ function draw_country_new_vaccinations(content) {
             meta: [country],
             x: xValues,
             y: yValues,
-            hovertemplate: '%{x} <br> %{meta[0]}: %{y} vaccinations <extra></extra>'
+            customdata: avgValues,
+            hovertemplate: '%{x} <br> <b>%{meta[0]}:</b> %{y} vaccinations<br>\
+            7-day average: %{customdata} <extra></extra>'
         };
     
         main_data.push(data)
