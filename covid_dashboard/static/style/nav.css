@@ -14,7 +14,10 @@
 }
 
 .navigation {
-    margin-top: 0;
+    z-index: 3000;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
 }
 
@@ -28,4 +31,8 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+main {
+    padding-top: 40px;
 }
