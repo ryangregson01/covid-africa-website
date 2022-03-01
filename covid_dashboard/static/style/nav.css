@@ -11,6 +11,10 @@
     font-weight: bold;
     font-style: italic;
     margin-top: 0;
+    z-index: 3000;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
 }
 
@@ -29,4 +33,8 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
+}
+
+main {
+    padding-top: 40px;
 }
