@@ -2,6 +2,10 @@
 function create_summary_table(summaryContent) {
     var dataset = summaryContent;
     $('#all-countries-table').DataTable( {
+        language: {
+            searchPlaceholder: "Search table...",
+            search: "",
+        },
         "scrollY":        "250px",
         "scrollCollapse": true,
         "paging":         false,
@@ -138,9 +142,7 @@ function draw_map(content) {
             height: (9/16*100)+'%'
         },
 
-        title: {
-            text: 'Interactive Map'
-        },
+        title:false,
 
         legend: {
             enabled: false
@@ -223,8 +225,13 @@ for (var i=0; i < countries.length; i += 1) {
 var start_graph_date = await start_date_of_graph(last_date);
 
 var layout = {
-    title: 'Average Number of New Cases per Week',
-    height: 600,
+    margin: {
+        l: 50,
+        r: 20,
+        t: 20,
+        b: 50,
+        pad: 0
+    },
     xaxis: {
         fixedrange: true,
         showgrid: false,
@@ -268,8 +275,8 @@ var layout = {
     hoverlabel: {bgcolor: 'white'},
     legend: {text: 'country'},
 };
-
-Plotly.newPlot("average-cases", main_data, layout);
+var config = {responsive: true};
+Plotly.newPlot("average-cases", main_data, layout, config);
 };
 
 function draw_countries_vaccinations(content) {
@@ -373,8 +380,14 @@ function draw_countries_vaccinations(content) {
     }
 
     var layout = {
+        margin: {
+            l: 50,
+            r: 20,
+            t: 20,
+            b: 50,
+            pad: 0
+        },
         barmode: 'group',
-        title: 'Vaccination Coverage by Country',
         height: 1000,
         legend: {'traceorder':'reversed'},
         grid: {
@@ -433,8 +446,8 @@ function draw_countries_vaccinations(content) {
         hoverlabel: {bgcolor: 'white'},
         hovermode: 'closest'
     };
-
-    Plotly.newPlot("countries-vaccinations", main_data, layout);
+    var config = {responsive: true};
+    Plotly.newPlot("countries-vaccinations", main_data, layout, config);
 };
 
 
@@ -498,6 +511,13 @@ async function draw_country_new_vaccinations(content) {
         main_data.push(data)
         
         var layout = {
+            margin: {
+				l: 50,
+				r: 20,
+				t: 20,
+				b: 50,
+				pad: 0
+	        },
             height: 600,
             xaxis: {
                 fixedrange: true,
@@ -542,8 +562,8 @@ async function draw_country_new_vaccinations(content) {
             hoverlabel: {bgcolor: 'white'},
             legend: {text: 'country'},
         };
-        
-        Plotly.newPlot("country-new-vaccinations", main_data, layout);
+        var config = {responsive: true};
+        Plotly.newPlot("country-new-vaccinations", main_data, layout, config);
     };
 
     // Drop-down button from https://plotly.com/javascript/dropdowns/
@@ -566,7 +586,6 @@ async function draw_country_new_vaccinations(content) {
     function updateCountry() {
         setPlot(countrySelector.value);
     }
-
 };
 
 function start_date_of_graph(last_date) {
