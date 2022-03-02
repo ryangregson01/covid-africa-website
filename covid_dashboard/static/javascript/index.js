@@ -221,6 +221,7 @@ var layout = {
     title: 'Average Number of New Cases per Week',
     height: 600,
     xaxis: {
+        fixedrange: true,
         showgrid: false,
         linecolor: 'black',
         rangeselector: {buttons: [
@@ -254,7 +255,8 @@ var layout = {
         ]}
     },
     yaxis: {
-        title: {text: 'Number of New Cases'}
+        title: {text: 'Number of New Cases'},
+        fixedrange: true
     },
     hovermode: 'closest',
     hoverlabel: {bgcolor: 'white'},
@@ -385,7 +387,8 @@ function draw_countries_vaccinations(content) {
                 font: {
                     color: 'orange',
                 }
-            }
+            },
+            fixedrange: true
         },
         xaxis2: {
             'range': [0, 100],
@@ -398,7 +401,8 @@ function draw_countries_vaccinations(content) {
                 font: {
                     color: 'green'
                 }
-            }
+            },
+            fixedrange: true
         },
         xaxis3: {
             'range': [0, 100],
@@ -411,12 +415,14 @@ function draw_countries_vaccinations(content) {
                 font: {
                     color: 'brown'
                 }
-            }
+            },
+            fixedrange: true
         },
         yaxis: {
             bargap: 0.5,
             'showgrid':true,
-            automargin: true
+            automargin: true,
+            fixedrange: true
         },
         hoverlabel: {bgcolor: 'white'},
         hovermode: 'closest'
@@ -485,6 +491,7 @@ function draw_country_new_vaccinations(content) {
         var layout = {
             height: 600,
             xaxis: {
+                fixedrange: true,
                 showgrid: false,
                 linecolor: 'black',
                 rangeselector: {buttons: [
@@ -519,7 +526,8 @@ function draw_country_new_vaccinations(content) {
                 ]}
             },
             yaxis: {
-                title: {text: 'Number of New Vaccinations'}
+                title: {text: 'Number of New Vaccinations'},
+                fixedrange: true
             },
             hovermode: 'closest',
             hoverlabel: {bgcolor: 'white'},
