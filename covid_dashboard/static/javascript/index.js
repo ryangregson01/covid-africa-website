@@ -487,8 +487,9 @@ async function draw_country_new_vaccinations(content) {
             x: xValues,
             y: yValues,
             customdata: avgValues,
-            hovertemplate: '%{x} <br> <b>%{meta[0]}:</b> %{y} vaccinations<br>\
-            7-day average: %{customdata} <extra></extra>'
+            hovertemplate: '%{x}' + 
+                            '<br><b>%{meta[0]}:</b> %{y} vaccinations<br>' +
+                            '7-day average: %{customdata} <extra></extra>'
         };
     
         main_data.push(data)
