@@ -575,5 +575,4 @@ function start_date_of_graph(last_date) {
     For date formatting */
     var start_graph_date = last_graph_date.toLocaleDateString('en-CA');
     return start_graph_date;
-    //return last_date;
 };
