@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from clickhouse_driver import Client
 
@@ -118,3 +118,10 @@ def get_new_vaccinated_data(request):
     """)
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
+
+
+def get_last_update(request):
+    results = get_db_conn().execute(
+        "SELECT MAX(UpdateDate) FROM covid19.updates"
+    )
+    return HttpResponse(results[0])
