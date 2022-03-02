@@ -167,7 +167,7 @@ function draw_map(content) {
     });
 }
 
-function draw_average_cases(content) {
+async function draw_average_cases(content) {
 
 var location_cases = {};
 var dates = [];
@@ -217,6 +217,8 @@ for (var i=0; i < countries.length; i += 1) {
     main_data.push(data[0])
 }
 
+var start_graph_date = await start_date_of_graph(last_date);
+
 var layout = {
     title: 'Average Number of New Cases per Week',
     height: 600,
@@ -224,6 +226,7 @@ var layout = {
         fixedrange: true,
         showgrid: false,
         linecolor: 'black',
+        range: [start_graph_date, last_date],
         rangeselector: {buttons: [
             {
                 count: 1,
@@ -432,7 +435,7 @@ function draw_countries_vaccinations(content) {
 };
 
 
-function draw_country_new_vaccinations(content) {
+async function draw_country_new_vaccinations(content) {
 
     var location_vaccinations = {};
     var dates = [];
@@ -464,6 +467,8 @@ function draw_country_new_vaccinations(content) {
         }
     });
 
+    var start_graph_date = await start_date_of_graph(last_date);
+
     // Default Country Data for countries ordered alphabetically
     setPlot('Algeria')
 
@@ -494,6 +499,7 @@ function draw_country_new_vaccinations(content) {
                 fixedrange: true,
                 showgrid: false,
                 linecolor: 'black',
+                range: [start_graph_date, last_date],
                 rangeselector: {buttons: [
                     {
                         count: 1,
@@ -505,8 +511,7 @@ function draw_country_new_vaccinations(content) {
                         count: 3,
                         label: '3m',
                         step: 'month',
-                        stepmode: 'backward',
-                        selected: true
+                        stepmode: 'backward'
                     },
                     {
                         count: 6,
@@ -558,4 +563,17 @@ function draw_country_new_vaccinations(content) {
         setPlot(countrySelector.value);
     }
 
+};
+
+function start_date_of_graph(last_date) {
+    // Gets a date 6 months before last_date, to be used for start of xaxis.
+    // Plotly does not allow presetting to the 6m range button, but we can set
+    // default range values.
+    var last_graph_date = new Date(last_date);
+    last_graph_date.setMonth(last_graph_date.getMonth() - 6)
+    /* https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+    For date formatting */
+    var start_graph_date = last_graph_date.toLocaleDateString('en-CA');
+    return start_graph_date;
+    //return last_date;
 };
