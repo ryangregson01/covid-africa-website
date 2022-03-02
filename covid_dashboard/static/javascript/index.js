@@ -52,18 +52,21 @@ function create_summary_table(summaryContent) {
 
 
 function insert_weekly_maxs(weeklyMaxsContent) {
+    // request returns list containing three sublists
     var box_type = ["case", "death", "vacc"];
+    // loop over each sublist
     weeklyMaxsContent.forEach((item, index) => {
-        var i = Math.floor(index / 5) // first 5 use "case", next 5 use "death"...
+        var table = document.getElementById(box_type[index] + '-table');
+        // each sublist contains 5 country names and corresponding numbers
+        for (let i = 0; i < item.length; i++) {
+            var newRow = table.insertRow(-1);
 
-        var table = document.getElementById(box_type[i] + '-table');
-        var newRow = table.insertRow(-1);
+            var countryCol = newRow.insertCell(0);
+            var numCol = newRow.insertCell(1);
 
-        var countryCol = newRow.insertCell(0);
-        var numCol = newRow.insertCell(1);
-
-        countryCol.innerHTML = item[0];
-        numCol.innerHTML = "+"+item[1];
+            countryCol.innerHTML = item[i][0];
+            numCol.innerHTML = "+"+item[i][1];
+        }
     });
 }
 
