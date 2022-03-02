@@ -71,7 +71,7 @@ def get_vaccinated_percentage(request):
 
 
 def get_weekly_maxs(request):
-    results = get_db_conn().execute("""
+    cases_results = get_db_conn().execute("""
         (SELECT TOP 5
             Location,
             ceil(AVG(NewCasesPerMil)) AS newCases
@@ -79,23 +79,28 @@ def get_weekly_maxs(request):
         WHERE Continent='Africa' AND UpdateDate>=today() - 7
         GROUP BY Location
         ORDER BY newCases DESC)
-        UNION ALL
-        (SELECT TOP 5
+    """)
+
+    deaths_results = get_db_conn().execute("""
+        SELECT TOP 5
             Location,
             ceil(AVG(NewDeathsPerMil)) AS newDeaths
         FROM covid19.updates
         WHERE Continent='Africa' AND UpdateDate>=today() - 7
         GROUP BY Location
-        ORDER BY newDeaths DESC)
-        UNION ALL
-        (SELECT TOP 5
+        ORDER BY newDeaths DESC
+    """)
+
+    vacc_results = get_db_conn().execute("""
+        SELECT TOP 5
             Location,
             ceil(AVG(NewVaccinationsSmoothPerMil)) AS newVacc
         FROM covid19.updates
         WHERE Continent='Africa' AND UpdateDate>=today() - 7
         GROUP BY Location
-        ORDER BY newVacc DESC)
+        ORDER BY newVacc DESC
     """)
+    results = [cases_results, deaths_results, vacc_results]
     return JsonResponse(results, safe=False,
                         json_dumps_params={"default": str})
 
