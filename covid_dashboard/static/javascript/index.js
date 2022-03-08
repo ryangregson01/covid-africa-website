@@ -1,4 +1,20 @@
 function create_summary_table(summaryContent) {
+    
+    // Slimmed summary removes unneccessary fields from summaryContext
+    var slimmed_summary = [];
+    summaryContent.forEach(country => {
+        var location = country[0]
+        var cases = country[3];
+        var new_cases = country[4];
+        var deaths = country[6];
+        var new_deaths = country[7];
+        var vaccinations = country[9];
+        var new_vaccinations = country[10];
+        slimmed_country = [location, cases, new_cases, deaths, new_deaths, vaccinations, new_vaccinations];
+        slimmed_summary.push(slimmed_country)
+    });
+
+    var dataset = slimmed_summary;
     $('#all-countries-table').DataTable( {
         language: {
             searchPlaceholder: "Search table...",
