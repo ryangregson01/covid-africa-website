@@ -1,6 +1,4 @@
-
 function create_summary_table(summaryContent) {
-    var dataset = summaryContent;
     $('#all-countries-table').DataTable( {
         language: {
             searchPlaceholder: "Search table...",
@@ -9,27 +7,35 @@ function create_summary_table(summaryContent) {
         "scrollY":        "250px",
         "scrollCollapse": true,
         "paging":         false,
-        "data": dataset,
+        "data": summaryContent,
         "columns": [
             { "title": "Country" },
             { "title": "Cases" },
-            { "title": "New Cases" },
+            { "title": "New Cases"},
             { "title": "Deaths" },
             { "title": "New Deaths" },
             { "title": "Vaccinated" },
             { "title": "New Vaccinations" },
         ],
         columnDefs: [
-            {targets: [1,3,5],
-                className: 'dt-center',
+            {   type: 'num-html',
+                targets: [1,3,5],
+                className: 'dt-justify',
                 render: function (data, type, row) {
+                    if (data == null){
+                        return "<span style=color:black><i>No data</i></span>";
+                    }
                     var color = 'black';
                     return '<span style="color:' + color + '">' + data + '</span>';
                 }
             },
-            {targets: [2,4],
-                className: 'dt-center',
+            {   type: 'num-html',
+                targets: [2,4],
+                className: 'dt-justify',
                 render: function ( data, type, row ) {
+                    if (data == null){
+                        return "<span style=color:black><i>No data</i></span>";
+                    }
                     var color = 'black';
                     if (data < 0) {
                     color = 'green';
@@ -40,9 +46,14 @@ function create_summary_table(summaryContent) {
                     return '<span style="color:' + color + '">' + data + '</span>';
                 }
             },
-            {targets: 6,
-                className: 'dt-center',
+            {   type: 'num-html',
+                targets: 6,
+                className: 'dt-justify',
                 render: function ( data, type, row ) {
+                    if (data == null){
+                        return "<span style=color:black><i>No data</i></span>";
+                    }
+                    console.log(data);
                     var color = 'black';
                     if (data > 0) {
                     color = 'green';
