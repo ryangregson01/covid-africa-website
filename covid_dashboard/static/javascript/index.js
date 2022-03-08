@@ -170,7 +170,6 @@ function draw_map(content) {
         },
 
         title:false,
-
         legend: {
             enabled: false
         },
