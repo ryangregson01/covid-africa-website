@@ -69,7 +69,6 @@ function create_summary_table(summaryContent) {
                     if (data == null){
                         return "<span style=color:black><i>No data</i></span>";
                     }
-                    console.log(data);
                     var color = 'black';
                     if (data > 0) {
                     color = 'green';
@@ -149,17 +148,14 @@ function draw_map(content) {
         var hc_key = convert[key];
         if (hc_key != undefined) {
             var country = location_cases[key];
-            // For seeing all cases on map
-            var summed_cases = country.data.reduce((a, b) => a+b, 0);
             // Finding cases in most recent week
             var all_cases_arr = country.data;
             var recent_week_cases = all_cases_arr[all_cases_arr.length-1];
 
-            if (recent_week_cases > 0 && recent_week_cases != null) {
-                map_arr.push([hc_key, recent_week_cases]);
-            } else {
-                map_arr.push([hc_key, 0]);
+            if (recent_week_cases == null) {
+                recent_week_cases = 'No data';
             }
+            map_arr.push([hc_key, {'cases': recent_week_cases}]);
         }
     }
 
@@ -180,6 +176,14 @@ function draw_map(content) {
             maxColor: '#ff8080'
         }, */
 
+        tooltip: {
+            headerFormat: "",
+            formatter: function(tooltip) {
+                return '<b>'+this.point.name+'</b><br><br>'+
+                'New Cases: '+this.point.value['cases']+'<br>';
+            }
+        },
+
         series: [{
             data: map_arr,
             name: 'Weekly cases',
@@ -192,7 +196,11 @@ function draw_map(content) {
             },
             dataLabels: {
                 enabled: true,
-                format: '{point.name}'
+                // Use formatter function for dataLabel so default name and ISO 
+                // can be swapped between easily with a country-ISO dictionary
+                formatter: function() {
+                    return this.point.name;
+                }
             }
         }]
     });
