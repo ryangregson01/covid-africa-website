@@ -1,31 +1,57 @@
-
 function create_summary_table(summaryContent) {
-    var dataset = summaryContent;
+    
+    // Slimmed summary removes unneccessary fields from summaryContext
+    var slimmed_summary = [];
+    summaryContent.forEach(country => {
+        var location = country[0]
+        var cases = country[3];
+        var new_cases = country[4];
+        var deaths = country[6];
+        var new_deaths = country[7];
+        var vaccinations = country[9];
+        var new_vaccinations = country[10];
+        slimmed_country = [location, cases, new_cases, deaths, new_deaths, vaccinations, new_vaccinations];
+        slimmed_summary.push(slimmed_country)
+    });
+
+    var dataset = slimmed_summary;
     $('#all-countries-table').DataTable( {
+        language: {
+            searchPlaceholder: "Search table...",
+            search: "",
+        },
         "scrollY":        "250px",
         "scrollCollapse": true,
         "paging":         false,
-        "data": dataset,
+        "data": summaryContent,
         "columns": [
             { "title": "Country" },
             { "title": "Cases" },
-            { "title": "New Cases" },
+            { "title": "New Cases"},
             { "title": "Deaths" },
             { "title": "New Deaths" },
             { "title": "Vaccinated" },
             { "title": "New Vaccinations" },
         ],
         columnDefs: [
-            {targets: [1,3,5],
-                className: 'dt-center',
+            {   type: 'num-html',
+                targets: [1,3,5],
+                className: 'dt-justify',
                 render: function (data, type, row) {
+                    if (data == null){
+                        return "<span style=color:black><i>No data</i></span>";
+                    }
                     var color = 'black';
                     return '<span style="color:' + color + '">' + data + '</span>';
                 }
             },
-            {targets: [2,4],
-                className: 'dt-center',
+            {   type: 'num-html',
+                targets: [2,4],
+                className: 'dt-justify',
                 render: function ( data, type, row ) {
+                    if (data == null){
+                        return "<span style=color:black><i>No data</i></span>";
+                    }
                     var color = 'black';
                     if (data < 0) {
                     color = 'green';
@@ -36,9 +62,13 @@ function create_summary_table(summaryContent) {
                     return '<span style="color:' + color + '">' + data + '</span>';
                 }
             },
-            {targets: 6,
-                className: 'dt-center',
+            {   type: 'num-html',
+                targets: 6,
+                className: 'dt-justify',
                 render: function ( data, type, row ) {
+                    if (data == null){
+                        return "<span style=color:black><i>No data</i></span>";
+                    }
                     var color = 'black';
                     if (data > 0) {
                     color = 'green';
@@ -52,18 +82,21 @@ function create_summary_table(summaryContent) {
 
 
 function insert_weekly_maxs(weeklyMaxsContent) {
+    // request returns list containing three sublists
     var box_type = ["case", "death", "vacc"];
+    // loop over each sublist
     weeklyMaxsContent.forEach((item, index) => {
-        var i = Math.floor(index / 5) // first 5 use "case", next 5 use "death"...
+        var table = document.getElementById(box_type[index] + '-table');
+        // each sublist contains 5 country names and corresponding numbers
+        for (let i = 0; i < item.length; i++) {
+            var newRow = table.insertRow(-1);
 
-        var table = document.getElementById(box_type[i] + '-table');
-        var newRow = table.insertRow(-1);
+            var countryCol = newRow.insertCell(0);
+            var numCol = newRow.insertCell(1);
 
-        var countryCol = newRow.insertCell(0);
-        var numCol = newRow.insertCell(1);
-
-        countryCol.innerHTML = item[0];
-        numCol.innerHTML = "+"+item[1];
+            countryCol.innerHTML = item[i][0];
+            numCol.innerHTML = "+"+item[i][1];
+        }
     });
 }
 
@@ -74,16 +107,19 @@ function draw_map(content) {
 
     content.forEach((row) => {
         var location_ = row[0];
-        var n_cases = row[2];
+        var new_cases = row[1];
+        var new_deaths = row[2];
+        var new_vaccinations = row[3];
+        var population = row[4];
 
         var cur_location = location_cases[location_];
         if (cur_location === undefined) {
             location_cases[location_] = {
-                name: location_,
-                data: [n_cases],
+                cases: new_cases,
+                deaths: new_deaths,
+                vaccinations: new_vaccinations,
+                population: population
             };
-        } else {
-            cur_location.data.push(n_cases)
         }
     });
 
@@ -114,18 +150,21 @@ function draw_map(content) {
     for (var key in location_cases) {
         var hc_key = convert[key];
         if (hc_key != undefined) {
-            var country = location_cases[key];
-            // For seeing all cases on map
-            var summed_cases = country.data.reduce((a, b) => a+b, 0);
-            // Finding cases in most recent week
-            var all_cases_arr = country.data;
-            var recent_week_cases = all_cases_arr[all_cases_arr.length-1];
+            var recent_week_data = location_cases[key];
 
-            if (recent_week_cases > 0 && recent_week_cases != null) {
-                map_arr.push([hc_key, recent_week_cases]);
-            } else {
-                map_arr.push([hc_key, 0]);
+            if (recent_week_data['cases'] == null) {
+                recent_week_data['cases'] = 'No data';
             }
+            if (recent_week_data['deaths'] == null) {
+                recent_week_data['deaths'] = 'No data';
+            }
+            if (recent_week_data['vaccinations'] == null) {
+                recent_week_data['vaccinations'] = 'No data';
+            }
+            if (recent_week_data['population'] == null) {
+                recent_week_data['population'] = 'No data';
+            }
+            map_arr.push([hc_key, recent_week_data]);
         }
     }
 
@@ -135,8 +174,9 @@ function draw_map(content) {
             height: (9/16*100)+'%'
         },
 
-        title: {
-            text: 'Interactive Map'
+        title:false,
+        legend: {
+            enabled: false
         },
 
         /* For when data is normalised
@@ -144,6 +184,17 @@ function draw_map(content) {
             minColor: '#80ff80',
             maxColor: '#ff8080'
         }, */
+
+        tooltip: {
+            headerFormat: "",
+            formatter: function(tooltip) {
+                return '<b>'+this.point.name+'</b><br><br>'+
+                'New Cases: '+this.point.value['cases']+'<br>'+
+                'New Deaths: '+this.point.value['deaths']+'<br>'+
+                'New Vaccinations: '+this.point.value['vaccinations']+'<br>'+
+                'Population: '+this.point.value['population']+' million';
+            }
+        },
 
         series: [{
             data: map_arr,
@@ -157,13 +208,17 @@ function draw_map(content) {
             },
             dataLabels: {
                 enabled: true,
-                format: '{point.name}'
+                // Use formatter function for dataLabel so default name and ISO 
+                // can be swapped between easily with a country-ISO dictionary
+                formatter: function() {
+                    return this.point.name;
+                }
             }
         }]
     });
 }
 
-function draw_average_cases(content) {
+async function draw_average_cases(content) {
 
 var location_cases = {};
 var dates = [];
@@ -194,6 +249,7 @@ content.forEach((row) => {
 
 var main_data = []
 const countries = Object.keys(location_cases);
+countries.sort();
 for (var i=0; i < countries.length; i += 1) {
     var country = countries[i]
     var xValues = location_cases[country].date_recorded
@@ -212,12 +268,21 @@ for (var i=0; i < countries.length; i += 1) {
     main_data.push(data[0])
 }
 
+var start_graph_date = await start_date_of_graph(last_date);
+
 var layout = {
-    title: 'Average Number of New Cases per Week',
-    height: 600,
+    margin: {
+        l: 50,
+        r: 20,
+        t: 20,
+        b: 50,
+        pad: 0
+    },
     xaxis: {
+        fixedrange: true,
         showgrid: false,
         linecolor: 'black',
+        range: [start_graph_date, last_date],
         rangeselector: {buttons: [
             {
                 count: 1,
@@ -249,14 +314,15 @@ var layout = {
         ]}
     },
     yaxis: {
-        title: {text: 'Number of New Cases'}
+        title: {text: 'Number of New Cases'},
+        fixedrange: true
     },
     hovermode: 'closest',
     hoverlabel: {bgcolor: 'white'},
     legend: {text: 'country'},
 };
-
-Plotly.newPlot("average-cases", main_data, layout);
+var config = {responsive: true};
+Plotly.newPlot("average-cases", main_data, layout, config);
 };
 
 function draw_countries_vaccinations(content) {
@@ -360,8 +426,14 @@ function draw_countries_vaccinations(content) {
     }
 
     var layout = {
+        margin: {
+            l: 50,
+            r: 20,
+            t: 20,
+            b: 50,
+            pad: 0
+        },
         barmode: 'group',
-        title: 'Vaccination Coverage by Country',
         height: 1000,
         legend: {'traceorder':'reversed'},
         grid: {
@@ -380,7 +452,8 @@ function draw_countries_vaccinations(content) {
                 font: {
                     color: 'orange',
                 }
-            }
+            },
+            fixedrange: true
         },
         xaxis2: {
             'range': [0, 100],
@@ -393,7 +466,8 @@ function draw_countries_vaccinations(content) {
                 font: {
                     color: 'green'
                 }
-            }
+            },
+            fixedrange: true
         },
         xaxis3: {
             'range': [0, 100],
@@ -406,22 +480,24 @@ function draw_countries_vaccinations(content) {
                 font: {
                     color: 'brown'
                 }
-            }
+            },
+            fixedrange: true
         },
         yaxis: {
             bargap: 0.5,
             'showgrid':true,
-            automargin: true
+            automargin: true,
+            fixedrange: true
         },
         hoverlabel: {bgcolor: 'white'},
         hovermode: 'closest'
     };
-
-    Plotly.newPlot("countries-vaccinations", main_data, layout);
+    var config = {responsive: true};
+    Plotly.newPlot("countries-vaccinations", main_data, layout, config);
 };
 
 
-function draw_country_new_vaccinations(content) {
+async function draw_country_new_vaccinations(content) {
 
     var location_vaccinations = {};
     var dates = [];
@@ -430,17 +506,20 @@ function draw_country_new_vaccinations(content) {
     content.forEach((row) => {
         var location_ = row[0];
         var datestamp = row[1];
-        var n_vaccines = row[3];
+        var n_vaccines = row[2];
+        var n_avg_vaccines = row[3];
     
         var cur_location = location_vaccinations[location_];
         if (cur_location === undefined) {
             location_vaccinations[location_] = {
                 name: location_,
                 vaccine_data: [n_vaccines],
+                avg_vaccine_data: [n_avg_vaccines],
                 date_recorded: [datestamp]
             };
         } else {
             cur_location.vaccine_data.push(n_vaccines);
+            cur_location.avg_vaccine_data.push(n_avg_vaccines);
             cur_location.date_recorded.push(datestamp);
         }
     
@@ -450,16 +529,18 @@ function draw_country_new_vaccinations(content) {
         }
     });
 
+    var start_graph_date = await start_date_of_graph(last_date);
+
     // Default Country Data for countries ordered alphabetically
     setPlot('Algeria')
 
     function setPlot(countryName) {
 
-        var main_data = []
+        var main_data = [];
         var country = countryName
-        var xValues = location_vaccinations[country].date_recorded
-        var yValues = location_vaccinations[country].vaccine_data
-    
+        var xValues = location_vaccinations[country].date_recorded;
+        var yValues = location_vaccinations[country].vaccine_data;
+        var avgValues = location_vaccinations[country].avg_vaccine_data;
     
         var data = {
             type: 'bar',
@@ -467,16 +548,28 @@ function draw_country_new_vaccinations(content) {
             meta: [country],
             x: xValues,
             y: yValues,
-            hovertemplate: '%{x} <br> %{meta[0]}: %{y} vaccinations <extra></extra>'
+            customdata: avgValues,
+            hovertemplate: '%{x}' + 
+                            '<br><b>%{meta[0]}:</b> %{y} vaccinations<br>' +
+                            '7-day average: %{customdata} <extra></extra>'
         };
     
         main_data.push(data)
         
         var layout = {
+            margin: {
+				l: 50,
+				r: 20,
+				t: 20,
+				b: 50,
+				pad: 0
+	        },
             height: 600,
             xaxis: {
+                fixedrange: true,
                 showgrid: false,
                 linecolor: 'black',
+                range: [start_graph_date, last_date],
                 rangeselector: {buttons: [
                     {
                         count: 1,
@@ -488,8 +581,7 @@ function draw_country_new_vaccinations(content) {
                         count: 3,
                         label: '3m',
                         step: 'month',
-                        stepmode: 'backward',
-                        selected: true
+                        stepmode: 'backward'
                     },
                     {
                         count: 6,
@@ -509,14 +601,15 @@ function draw_country_new_vaccinations(content) {
                 ]}
             },
             yaxis: {
-                title: {text: 'Number of New Vaccinations'}
+                title: {text: 'Number of New Vaccinations'},
+                fixedrange: true
             },
             hovermode: 'closest',
             hoverlabel: {bgcolor: 'white'},
             legend: {text: 'country'},
         };
-        
-        Plotly.newPlot("country-new-vaccinations", main_data, layout);
+        var config = {responsive: true};
+        Plotly.newPlot("country-new-vaccinations", main_data, layout, config);
     };
 
     // Drop-down button from https://plotly.com/javascript/dropdowns/
@@ -539,5 +632,16 @@ function draw_country_new_vaccinations(content) {
     function updateCountry() {
         setPlot(countrySelector.value);
     }
+};
 
+function start_date_of_graph(last_date) {
+    // Gets a date 6 months before last_date, to be used for start of xaxis.
+    // Plotly does not allow presetting to the 6m range button, but we can set
+    // default range values.
+    var last_graph_date = new Date(last_date);
+    last_graph_date.setMonth(last_graph_date.getMonth() - 6)
+    /* https://stackoverflow.com/questions/23593052/format-javascript-date-as-yyyy-mm-dd
+    For date formatting */
+    var start_graph_date = last_graph_date.toLocaleDateString('en-CA');
+    return start_graph_date;
 };
