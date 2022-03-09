@@ -13,6 +13,8 @@ spec:
   - hosts:
     - covid-africa.com
     - covid-africa.info
+    - www.covid-africa.com
+    - www.covid-africa.info
     secretName: covid-africa-tls
   rules:
   - host: covid-africa.com
