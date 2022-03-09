@@ -6,6 +6,8 @@ spec:
   dnsNames:
   - covid-africa.com
   - covid-africa.info
+  - www.covid-africa.com
+  - www.covid-africa.info
   secretName: covid-africa-tls
   issuerRef:
     name: letsencrypt-prod
