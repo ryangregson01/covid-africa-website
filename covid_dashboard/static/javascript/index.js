@@ -107,16 +107,19 @@ function draw_map(content) {
 
     content.forEach((row) => {
         var location_ = row[0];
-        var n_cases = row[2];
+        var new_cases = row[1];
+        var new_deaths = row[2];
+        var new_vaccinations = row[3];
+        var population = row[4];
 
         var cur_location = location_cases[location_];
         if (cur_location === undefined) {
             location_cases[location_] = {
-                name: location_,
-                data: [n_cases],
+                cases: new_cases,
+                deaths: new_deaths,
+                vaccinations: new_vaccinations,
+                population: population
             };
-        } else {
-            cur_location.data.push(n_cases)
         }
     });
 
@@ -147,15 +150,21 @@ function draw_map(content) {
     for (var key in location_cases) {
         var hc_key = convert[key];
         if (hc_key != undefined) {
-            var country = location_cases[key];
-            // Finding cases in most recent week
-            var all_cases_arr = country.data;
-            var recent_week_cases = all_cases_arr[all_cases_arr.length-1];
+            var recent_week_data = location_cases[key];
 
-            if (recent_week_cases == null) {
-                recent_week_cases = 'No data';
+            if (recent_week_data['cases'] == null) {
+                recent_week_data['cases'] = 'No data';
             }
-            map_arr.push([hc_key, {'cases': recent_week_cases}]);
+            if (recent_week_data['deaths'] == null) {
+                recent_week_data['deaths'] = 'No data';
+            }
+            if (recent_week_data['vaccinations'] == null) {
+                recent_week_data['vaccinations'] = 'No data';
+            }
+            if (recent_week_data['population'] == null) {
+                recent_week_data['population'] = 'No data';
+            }
+            map_arr.push([hc_key, recent_week_data]);
         }
     }
 
@@ -180,7 +189,10 @@ function draw_map(content) {
             headerFormat: "",
             formatter: function(tooltip) {
                 return '<b>'+this.point.name+'</b><br><br>'+
-                'New Cases: '+this.point.value['cases']+'<br>';
+                'New Cases: '+this.point.value['cases']+'<br>'+
+                'New Deaths: '+this.point.value['deaths']+'<br>'+
+                'New Vaccinations: '+this.point.value['vaccinations']+'<br>'+
+                'Population: '+this.point.value['population']+' million';
             }
         },
 

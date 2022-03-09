@@ -21,8 +21,9 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('covid_data', views.get_covid_data, name='get_covid_data'),
-    path('summary_data', views.get_summary_data, name='get_summary_data'),
+    path('map_data/', views.get_map_data, name='get_map_data'),
+    path('covid_data/', views.get_covid_data, name='get_covid_data'),
+    path('summary_data/', views.get_summary_data, name='get_summary_data'),
     path('vaccination_data/', views.get_vaccinated_percentage,
          name='get_vaccinated_percentage'),
     path('weekly_max_data/', views.get_weekly_maxs, name='get_weekly_maxs'),
