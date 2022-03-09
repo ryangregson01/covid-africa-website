@@ -14,8 +14,6 @@ function create_summary_table(summaryContent) {
         slimmed_summary.push(slimmed_country)
     });
 
-    var dataset = slimmed_summary;
-
     $('#all-countries-table').DataTable( {
         language: {
             searchPlaceholder: "Search table...",
@@ -24,7 +22,7 @@ function create_summary_table(summaryContent) {
         "scrollY":        "250px",
         "scrollCollapse": true,
         "paging":         false,
-        "data": summaryContent,
+        "data": slimmed_summary,
         "columns": [
             { "title": "Country" },
             { "title": "Cases" },
