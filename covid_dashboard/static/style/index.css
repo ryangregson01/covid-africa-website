@@ -26,6 +26,12 @@
     padding: 1% 1% 1% 1%
 }
 
+.description {
+    padding-left: 10px;
+    text-align:start;
+    font-size: 14px;
+}
+
 .table-wrapper {
     border-radius: 5px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
