@@ -33,8 +33,7 @@ function create_summary_table(summaryContent) {
             { "title": "New Vaccinations" },
         ],
         columnDefs: [
-            {   type: 'num-html',
-                targets: [1,3,5],
+            {   targets: [1,3,5],
                 className: 'dt-justify',
                 render: function (data, type, row) {
                     if (data == null){
@@ -44,8 +43,7 @@ function create_summary_table(summaryContent) {
                     return '<span style="color:' + color + '">' + data + '</span>';
                 }
             },
-            {   type: 'num-html',
-                targets: [2,4],
+            {   targets: [2,4],
                 className: 'dt-justify',
                 render: function ( data, type, row ) {
                     if (data == null){
@@ -61,8 +59,7 @@ function create_summary_table(summaryContent) {
                     return '<span style="color:' + color + '">' + data + '</span>';
                 }
             },
-            {   type: 'num-html',
-                targets: 6,
+            {   targets: 6,
                 className: 'dt-justify',
                 render: function ( data, type, row ) {
                     if (data == null){

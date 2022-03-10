@@ -36,8 +36,8 @@
     <link rel="stylesheet" href="{% static 'style/nav.css' %}" />
     <link rel="stylesheet" href="{% static 'style/global.css' %}" />
     <link rel="stylesheet" href="{% static 'style/index.css' %}" />
-    <link rel="stylesheet" href="{% static 'style/dataTables-bootstrap5-min.css' %}">
-    <link rel="stylesheet" href="{% static 'style/twitter-bootstrap-5-0-1.css' %}">
+    <link rel="stylesheet" href="{% static 'style/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style/dataTables.bootstrap5.min.css' %}">
 
     <!-- load fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
@@ -45,16 +45,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" crossorigin />
 
     <!-- load scripts -->
-    <script src="{% static 'javascript/jquery-3-5-1.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/index.js' %}"></script>
+    <script src="{% static 'javascript/plotly.js' %}"></script>
     <script src="{% static 'javascript/highcharts.js' %}"></script>
     <script src="{% static 'javascript/highcharts-no-data-to-display.js' %}"></script>
     <script src="{% static 'javascript/highcharts-more.js' %}"></script>
     <script src="{% static 'javascript/highcharts-maps-modules.js' %}"></script>
     <script src="{% static 'javascript/highcharts-africa.js' %}"></script>
-    <script src="{% static 'javascript/jquery-dataTables-min.js' %}"></script>
-    <script src="{% static 'javascript/jquery-dataTables-bootstrap5-min.js' %}"></script>
-    <script src="{% static 'javascript/plotly.js' %}"></script>
-    <script type="text/javascript" src="{% static 'javascript/index.js' %}"></script>
+    <script src="{% static 'javascript/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'javascript/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'javascript/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'javascript/dataTables.bootstrap5.min.js' %}"></script>
 
 </head>
 <body>
@@ -62,36 +63,23 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KSNRX24"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-
     <nav class="navigation">
         <ul>
-            <li><a href="#top">Top of Page</a></li>
-            <li id=last-updated-field>Last Updated: pending</li>
+            <li><a href="#">Top of Page</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Sources</a></li>
+            <li><a href="#">Donate</a></li>
         </ul>
     </nav>
-    <main id="top">
+    <main>
         {% block body_block %}
             Hello, World!
         {% endblock %}
     </main>
 
-    <script>
-    fetch("{% url 'dashboard:get_last_update' %}", {
-        method: 'GET',
-        mode: 'same-origin',
-        cache: 'default',
-    }).then((response) => {
-        if (response.ok) {
-            response.text().then((update) => {
-                document.getElementById('last-updated-field').innerText = "Last Update: " + update;
-            });
-        } else {
-            document.getElementById('last-updated-field').innerText = "Last Update: Failed to get date.";
-        }
-    });
-    </script>
     <footer>
-        <p>Walt Anderson with collaboration with CS21</p>
+        <p>Walt Adamson with collaboration with CS21</p>
     </footer>
 </body>
 </html>
