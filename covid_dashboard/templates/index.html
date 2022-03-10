@@ -8,7 +8,7 @@
 {% block body_block %}
 
 <div id="interactive-map" class="graph-wrapper">
-    <div class="graph-head">Interactive Map</div>
+    <div class="graph-head">Weekly Increase by African Country</div>
     <div class="graph-body">
         <article id="choropleth" class="graph"></article>
     </div>
@@ -74,6 +74,22 @@
 </div>
 
 <script>
+let mapRequest = new Request("{% url 'dashboard:get_map_data' %}");
+const request_mapData = fetch(mapRequest, {
+        method: 'GET',
+        mode: 'same-origin',
+        cache: 'default'
+    }).then((response) => {
+        if (response.ok) {
+            response.json().then((content) => {
+                draw_map(content);
+            });
+        } else {
+            console.log("Failed to retrieve COVID-19 data.");
+        }
+    }
+);
+
 let summarydataRequest = new Request('{% url 'dashboard:get_summary_data' %}');
 const summaryRequest = fetch(summarydataRequest, {
         method: 'GET',
@@ -106,8 +122,8 @@ const request_weeklyMax = fetch(weeklyMaxRequest, {
     }
 );
 
-let dataRequest = new Request('{% url 'dashboard:get_covid_data' %}');
-const request = fetch(dataRequest, {
+let weeklyCasesRequest = new Request('{% url 'dashboard:get_covid_data' %}');
+const request_weeklyCases = fetch(weeklyCasesRequest, {
         method: 'GET',
         mode: 'same-origin',
         cache: 'default'
@@ -115,7 +131,6 @@ const request = fetch(dataRequest, {
         if (response.ok) {
             response.json().then((content) => {
                 draw_average_cases(content);
-                draw_map(content);
             });
         } else {
             console.log("Failed to retrieve COVID-19 data.");

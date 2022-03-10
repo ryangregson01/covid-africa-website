@@ -11,6 +11,25 @@ def index(request):
     return render(request, "index.html")
 
 
+def get_map_data(request):
+    results = get_db_conn().execute("""
+        SELECT
+            Location,
+            CEIL(AVG(NewCasesPerMil) / 10) AS NewCases,
+            CEIL(AVG(NewDeathsPerMil) / 10) AS NewDeaths,
+            CEIL(AVG(NewVaccinationsSmoothPerMil) / 10) AS NewVaccinations,
+            ROUND(MAX(Population / 1000000), 1) AS PopulationMillion
+        FROM covid19.updates
+        WHERE
+            Continent='Africa' AND UpdateDate>=today() - 7
+        GROUP BY
+            Location
+        ORDER BY Location DESC;
+    """)
+    return JsonResponse(results, safe=False,
+                        json_dumps_params={"default": str})
+
+
 def get_covid_data(request):
     results = get_db_conn().execute("""
         SELECT
