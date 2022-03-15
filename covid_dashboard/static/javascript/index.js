@@ -19,6 +19,7 @@ function create_summary_table(summaryContent) {
             searchPlaceholder: "Search table...",
             search: "",
         },
+        "bInfo" : false,
         "scrollY":        "250px",
         "scrollCollapse": true,
         "paging":         false,
