@@ -128,13 +128,12 @@ function draw_map(content) {
         'Sao Tome and Principe':'st', 'Tanzania':'tz', 'Sierra Leone':'sl',
         'Guinea-Bissau':'gw', 'Cape Verde':'cv', 'Seychelles':'sc',
         'Tunisia':'tn', 'Madagascar':'mg', 'Kenya':'ke',
-        'Democratic Republic of Congo':'cd', 'France':'fr', 'Mauritania':'mr',
-        'Algeria':'dz', 'Eritrea':'er', 'Equatorial Guinea':'gq',
-        'Mauritius':'mu', 'Senegal':'sn', 'Comoros':'km',
-        'Ethiopia':'et', 'Cote d\'Ivoire':'ci', 'Ghana':'gh',
-        'Zambia':'zm', 'Namibia':'na', 'Rwanda':'rw',
-        'Somaliland':'sx', 'Somalia':'so', 'Cameroon':'cm',
-        'Congo':'cg', 'Western Sahara':'eh', 'Benin':'bj',
+        'Democratic Republic of Congo':'cd', 'Mauritania':'mr', 'Algeria':'dz',
+        'Eritrea':'er', 'Equatorial Guinea':'gq', 'Mauritius':'mu', 
+        'Senegal':'sn', 'Comoros':'km', 'Ethiopia':'et', 
+        'Cote d\'Ivoire':'ci', 'Ghana':'gh', 'Zambia':'zm', 
+        'Namibia':'na', 'Rwanda':'rw', 'Somalia':'so', 
+        'Cameroon':'cm', 'Congo':'cg', 'Benin':'bj',
         'Burkina Faso':'bf', 'Togo':'tg', 'Niger':'ne',
         'Libya':'ly', 'Liberia':'lr', 'Malawi':'mw',
         'Gambia':'gm', 'Chad':'td', 'Gabon':'ga',
@@ -208,11 +207,8 @@ function draw_map(content) {
             },
             dataLabels: {
                 enabled: true,
-                // Use formatter function for dataLabel so default name and ISO 
-                // can be swapped between easily with a country-ISO dictionary
-                formatter: function() {
-                    return this.point.name;
-                }
+                // Accessing property dictionary in highcharts-africa.js to get ISO
+                format: '{point.properties.iso-a3}'
             }
         }]
     });
