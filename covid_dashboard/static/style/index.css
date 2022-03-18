@@ -1,3 +1,40 @@
+.footer-wrapper {
+    background-color: #bec9e9;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+    padding: 15px;
+    border-radius: 5px;
+    justify-content: space-evenly;
+    text-align: center;
+    gap: 10px 10px;
+    
+}
+
+#contact-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 35%;
+    
+}
+
+#contact-info ul {
+    list-style-type: none;
+}
+
+#faq {
+    max-width: 35%;
+    
+}
+
+#about-project {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 30%;
+}
+
 .graph-wrapper {
     border-radius: 5px;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
@@ -7,6 +44,7 @@
     padding-top: 20px;
     background-color: #f0f0f0;
 }
+
 .graph-head {
     position: absolute;
     height: min-content;
