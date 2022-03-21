@@ -7,16 +7,16 @@ Live website found at following URLs:
 
 ## Description
 The website is updated with recent Covid 19 data every day at 2am, using data from [Our World in Data](https://ourworldindata.org). This data harvester can be found in the database-refresher folder. The harvested data is stored using a ClickHouse database, stored in the clickhouse folder.
-- Detailed information of the database setup can be found in the wiki attatched with this project under [Architecture](https://stgit.dcs.gla.ac.uk/team-project-h/2021/cs21/cs21-main/-/wikis/Architecture) 
+- Detailed information of the database setup can be found in the wiki attatched with this project under Architecture.
 
 
 The website is built using the Django framework, located in the covid_dashboard folder. The website uses SQL queries to extract data from our database to get JSON content to display statistical tables and graphs.
-- For developers, we have documented each feature we have built and noteworthy remarks to aid understanding of the project. This can be found in the wiki attatched with this project under [Documented Features](https://stgit.dcs.gla.ac.uk/team-project-h/2021/cs21/cs21-main/-/wikis/Documented-Features)
-- Other end-users are expected to access the live website using the URLs at the top of this document. The website has been designed to be intuitive and includes help text on how to interact with each feature. A more in depth user guide can be found in the wiki attatched with this project under [User Guide](https://stgit.dcs.gla.ac.uk/team-project-h/2021/cs21/cs21-main/-/wikis/User-Guide)
+- For developers, we have documented each feature we have built and noteworthy remarks to aid understanding of the project. This can be found in the wiki attatched with this project under Documented Features.
+- Other end-users are expected to access the live website using the URLs at the top of this document. The website has been designed to be intuitive and includes help text on how to interact with each feature. A more in depth user guide can be found in the wiki attatched with this project under User Guide.
 
 
 The website is deployed using a Hetzner VPS and Kubernetes cluster and scrips located in the deploy folder. 
-- Please see the [Deployment](https://stgit.dcs.gla.ac.uk/team-project-h/2021/cs21/cs21-main/-/wikis/Architecture) page in the wiki attatched with this project for detailed information about Deployment.
+- Please see the Deployment page in the wiki attatched with this project for detailed information about Deployment.
 
 
 ## Getting Started
@@ -43,7 +43,7 @@ $ python -m pip install -r requirements.txt --user
 
 ### Executing (for development)
 - Ensure you are in the cs21-main folder
-- Now, follow the steps on the [Workflow](https://stgit.dcs.gla.ac.uk/team-project-h/2021/cs21/cs21-main/-/wikis/Workflow) page in the wiki attatched with this project. This provides detailed information on how to run our software as a developer and our conventions for making new commits.
+- Now, follow the steps on the Workflow page in the wiki attatched with this project. This provides detailed information on how to run our software as a developer and our conventions for making new commits.
 
 
 ## Contributors
